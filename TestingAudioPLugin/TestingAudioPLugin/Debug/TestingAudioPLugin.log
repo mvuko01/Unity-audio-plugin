@@ -1,0 +1,2 @@
+﻿TestingAudioPLugin.obj : error LNK2019: unresolved external symbol _Initialize referenced in function _main
+C:\Users\Matej\Desktop\Završni rad\Kod\TestingAudioPLugin\Debug\TestingAudioPLugin.exe : fatal error LNK1120: 1 unresolved externals
