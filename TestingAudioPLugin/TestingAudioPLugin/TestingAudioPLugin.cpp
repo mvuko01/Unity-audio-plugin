@@ -17,9 +17,9 @@ int main()
 	InitAudioEngine();
 	
 	LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", true);
-	LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", false);
-	PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", 50);
-	PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", 50);
+	//LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", false);
+	PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", 1.25f);
+	//PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", 50);
 	
 	while (1) {
 		UpdateAudioEngine();

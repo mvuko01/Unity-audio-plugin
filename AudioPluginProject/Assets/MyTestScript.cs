@@ -30,7 +30,16 @@ public class MyTestScript : MonoBehaviour
     public static extern int ReturnNumOfChannels();
 
     [DllImport("MyAudioPlugin")]
-    public static extern void SetListener(Vector3 pos);
+    public static extern void SetListener(Vector3 pos, Vector3 ori);
+
+    [DllImport("MyAudioPlugin")]
+    public static extern void SetSource(Vector3 pos);
+
+    [DllImport("MyAudioPlugin")]
+    public static extern void ChangeVolumeByDistance(int channelID);
+
+    [DllImport("MyAudioPlugin")]
+    public static extern void SetMinMaxDistance(float min, float max);
 
     [DllImport("MyAudioPlugin")]
     public static extern float GetListenerX();
@@ -44,6 +53,10 @@ public class MyTestScript : MonoBehaviour
     public AudioClip firstClip;
     public AudioClip secondClip;
     public GameObject listener;
+    public GameObject source;
+
+    int chID;
+    
 
     void Start()
     {
@@ -59,34 +72,40 @@ public class MyTestScript : MonoBehaviour
 
       
 
-        rez = LoadSound(secondPath, false);
-        Debug.Log("Rezult of LoadSound second: " + rez);
+        //rez = LoadSound(secondPath, false);
+        //Debug.Log("Rezult of LoadSound second: " + rez);
 
-        rez = PlaySounds(firstPath, 0.0f);
-        Debug.Log("Rezult of PlaySound first: " + rez);
+        chID = PlaySounds(firstPath, 0.0f);
+        Debug.Log("ChannelID of PlaySound first: " + chID);
 
-        rez = PlaySounds(secondPath, 0.0f);
-        Debug.Log("Rezult of PlaySound second: " + rez);
+        //rez = PlaySounds(secondPath, 0.0f);
+        //Debug.Log("Rezult of PlaySound second: " + rez);
         //PlaySounds(secondPath, 0.0f);
         Debug.Log("Number of sounds: " + ReturnNumOfSounds());
         Debug.Log("Number of channels: " + ReturnNumOfChannels());
 
-        Vector3 pos = listener.transform.position;
-        Debug.Log("Listener is in position: "+ pos);
-        SetListener(pos);
-        Debug.Log("Listener x= " + GetListenerX());
-        Debug.Log("Listener y= " + GetListenerY());
-        Debug.Log("Listener z= " + GetListenerZ());
 
 
+
+        SetMinMaxDistance(5.0f, 30.0f);
+        
+
+        
+        
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        Vector3 pos_of_listener = listener.transform.position;
+        Vector3 pos_of_source = source.transform.position;
+        Vector3 nul = Vector3.zero;
 
-       UpdateAudioEngine();
+        SetListener(pos_of_listener, nul);
+        SetSource(pos_of_source);
+        ChangeVolumeByDistance(chID);
+        UpdateAudioEngine();
         
     }
 

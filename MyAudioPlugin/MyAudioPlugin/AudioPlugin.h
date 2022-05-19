@@ -53,6 +53,10 @@ struct AudioListener {
 	Vector3 orientation;
 };
 
+struct AudioSource {
+	Vector3 position;
+};
+
 
 extern "C" {
 
@@ -77,11 +81,17 @@ extern "C" {
 	DllExport void SetChannelVolume(int nChannelId, float fVolumedB);
 	//bool IsPlaying(int nChannelId) const;
 
-	float dbToVolume(float dB);
-	float VolumeTodB(float volume);
+	
 	FMOD_VECTOR VectorToFmod(const Vector3& vPosition);
 
-	DllExport void SetListener(Vector3 pos);
+	
+	/*Moje funkcije*/
+	
+	DllExport void SetListener(Vector3 pos, Vector3 ori);
+	DllExport void SetSource(Vector3 pos);
+	DllExport void SetMinMaxDistance(float min, float max);
+	DllExport void ChangeVolumeByDistance(int nChannelId);
+
 	DllExport float GetListenerY();
 	DllExport float GetListenerX();
 	DllExport float GetListenerZ();

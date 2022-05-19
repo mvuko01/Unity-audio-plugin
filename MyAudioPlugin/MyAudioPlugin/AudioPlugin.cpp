@@ -9,6 +9,13 @@ using namespace std;
 using namespace FMOD;
 
 
+Implementation* sgpImplementation = nullptr;
+AudioListener listener;
+AudioSource source;
+float min_Sound_Distance;
+float max_Sound_Distance;
+
+
 Implementation::Implementation() {
 	system = NULL;
 	ErrorCheck(System_Create(&system));
@@ -50,16 +57,22 @@ void Implementation::Update() {
 }
 
 
-Implementation* sgpImplementation = nullptr;
-AudioListener* listener = nullptr;
+
 
  void  InitAudioEngine() {
 	sgpImplementation = new Implementation;
+	min_Sound_Distance = 5.0f;
+	max_Sound_Distance = 35.0f;
 }
 
 void  UpdateAudioEngine() {
 	sgpImplementation->Update();
 }
+
+void ShutdownAudioEngine() {
+	delete sgpImplementation;
+}
+
 
 /*void AudioEngine::LoadSound(const std::string& strSoundName, bool b3d, bool bLooping, bool bStream)
 {
@@ -192,7 +205,7 @@ int PlaySounds(char* pstrSoundPath, float fVolumedB, const Vector3& vPosition)
 		/*FMOD_VECTOR position = VectorToFmod(vPosition);
 		AudioEngine::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));*/
 		
-		//ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
+		ErrorCheck(pChannel->setVolume(fVolumedB));
 		ErrorCheck(pChannel->setPaused(false));
 		sgpImplementation->mChannels[nChannelId] = pChannel;
 		
@@ -212,16 +225,15 @@ void SetChannel3dPosition(int nChannelId, const Vector3& vPosition)
 	ErrorCheck(tFoundIt->second->set3DAttributes(&position, NULL));
 }
 
-void SetChannelVolume(int nChannelId, float fVolumedB)
+void SetChannelVolume(int nChannelId, float volume_value)
 {
 	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
 	if (tFoundIt == sgpImplementation->mChannels.end())
 		return;
 
-	ErrorCheck(tFoundIt->second->setVolume(dbToVolume(fVolumedB)));
+
+	ErrorCheck(tFoundIt->second->setVolume(volume_value));
 }
-
-
 
 
 
@@ -242,39 +254,54 @@ int ErrorCheck(FMOD_RESULT result) {
 	return 0;
 }
 
-float  dbToVolume(float dB)
+void ChangeVolumeByDistance(int nChannelId)
 {
-	return powf(10.0f, 0.05f * dB);
+	float distance = 0;
+	float volume = 0;
+
+	distance = sqrt(pow(listener.position.x - source.position.x, 2) + pow(listener.position.y - source.position.y, 2) + pow(listener.position.z - source.position.z, 2));
+	if (distance <= min_Sound_Distance)
+		volume = 1.2f;
+	else if (distance >= max_Sound_Distance)
+		volume = 0.0f;
+	else
+		volume = 1  - ((distance - min_Sound_Distance) / (max_Sound_Distance - min_Sound_Distance));
+	
+	SetChannelVolume(nChannelId, volume);
+	return;
 }
 
-float  VolumeTodB(float volume)
-{
-	return 20.0f * log10f(volume);
-}
-
-void ShutdownAudioEngine() {
-	delete sgpImplementation;
-}
 
 
-void SetListener(Vector3 pos) {
-	listener = new AudioListener;
-	listener->position = pos;
+void SetListener(Vector3 pos, Vector3 ori) {
+	
+	listener.position= pos;
+	listener.orientation= ori;
 }
+
+void SetSource(Vector3 pos) {
+	source.position = pos;
+}
+
+void SetMinMaxDistance(float min, float max) {
+	min_Sound_Distance = min;
+	max_Sound_Distance = max;
+}
+
 
 float GetListenerX()
 {
-	return listener->position.x;
+	return listener.position.x;
 }
 
 float GetListenerY() 
 {
-	return listener->position.y;
+	return listener.position.y;
 }
 
 float GetListenerZ()
 {
-	return listener->position.z;
+	return listener.position.x;
 }
 
 /*void ErrorCheck(FMOD_RESULT result)

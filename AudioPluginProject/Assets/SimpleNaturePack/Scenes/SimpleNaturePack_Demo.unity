@@ -2910,6 +2910,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 880970725214738984, guid: c60edd51c065ceb46b345849a03bc106, type: 3}
   m_PrefabInstance: {fileID: 739732976}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &739732978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6941765000743290380, guid: c60edd51c065ceb46b345849a03bc106, type: 3}
+  m_PrefabInstance: {fileID: 739732976}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &745635005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4065,7 +4070,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136385240}
   m_LocalRotation: {x: -0.008068183, y: 0.989572, z: -0.06139166, w: -0.13005103}
-  m_LocalPosition: {x: 6.064, y: 1.844, z: 13.629}
+  m_LocalPosition: {x: -11, y: 0.9, z: 1.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2079483091}
@@ -4086,6 +4091,7 @@ MonoBehaviour:
   firstClip: {fileID: 8300000, guid: 09c4aa79fdaf5e943bcf05e0df0b7546, type: 3}
   secondClip: {fileID: 8300000, guid: d0f6f5939e0678847ad86372a9d59393, type: 3}
   listener: {fileID: 1136385240}
+  source: {fileID: 739732978}
 --- !u!1001 &1223250803
 PrefabInstance:
   m_ObjectHideFlags: 0
