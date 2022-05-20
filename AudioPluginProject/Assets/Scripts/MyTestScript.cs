@@ -87,7 +87,7 @@ public class MyTestScript : MonoBehaviour
 
 
 
-        SetMinMaxDistance(5.0f, 30.0f);
+        SetMinMaxDistance(5.0f, 50.0f);
         
 
         
