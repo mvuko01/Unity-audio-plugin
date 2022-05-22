@@ -2,9 +2,10 @@
 C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\MyAudioPlugin\AudioPlugin.cpp(124,43): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\MyAudioPlugin\AudioPlugin.cpp(131,46): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\MyAudioPlugin\AudioPlugin.cpp(262,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\MyAudioPlugin\AudioPlugin.cpp(325,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
      Creating library C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\x64\Release\MyAudioPlugin.lib and object C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\x64\Release\MyAudioPlugin.exp
   Generating code
-  1 of 374 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  1 of 381 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

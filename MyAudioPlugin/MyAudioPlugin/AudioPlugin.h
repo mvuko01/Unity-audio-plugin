@@ -22,15 +22,6 @@ struct Vector3 {
 };
 
 
-
-struct cmp_str //sluzi kako bi u SoundMap mogli koristit char* kao kljuc
-{
-	bool operator()(char const* a, char const* b) const
-	{
-		return std::strcmp(a, b) < 0;
-	}
-};
-
 struct Implementation {
 	Implementation();
 	~Implementation();
@@ -50,7 +41,8 @@ struct Implementation {
 
 struct AudioListener {
 	Vector3 position;
-	Vector3 orientation;
+	Vector3 forward;
+	Vector3 up;
 };
 
 struct AudioSource {
@@ -87,7 +79,7 @@ extern "C" {
 	
 	/*Moje funkcije*/
 	
-	DllExport void SetListener(Vector3 pos, Vector3 ori);
+	DllExport void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
 	DllExport void SetSource(Vector3 pos);
 	DllExport void SetMinMaxDistance(float min, float max);
 	DllExport void ChangeVolumeByDistance(int nChannelId);
@@ -96,6 +88,16 @@ extern "C" {
 	DllExport float GetListenerX();
 	DllExport float GetListenerZ();
 
+
+	/*Utility --- vecina ovih ne treba dllexport*/
+
+	DllExport float VectorDotProduct(Vector3 vec1, Vector3 vec2);
+
+	DllExport Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2);
+	DllExport Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2);
+	DllExport float AngleValue();
+	DllExport Vector3 VectorNormalize(Vector3 vec1);
+	float VectorMagnitude(Vector3 vec1);
 }
 
 

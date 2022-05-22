@@ -95,6 +95,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MyAudioPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -121,6 +122,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MyAudioPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -143,6 +145,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MyAudioPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -169,6 +172,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MyAudioPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Matej\Desktop\Završni rad\Kod\MyAudioPlugin\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -180,6 +184,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TestingAudioPLugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestingAudioPLugin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

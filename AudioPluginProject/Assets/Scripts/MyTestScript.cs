@@ -30,7 +30,7 @@ public class MyTestScript : MonoBehaviour
     public static extern int ReturnNumOfChannels();
 
     [DllImport("MyAudioPlugin")]
-    public static extern void SetListener(Vector3 pos, Vector3 ori);
+    public static extern void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
 
     [DllImport("MyAudioPlugin")]
     public static extern void SetSource(Vector3 pos);
@@ -40,6 +40,9 @@ public class MyTestScript : MonoBehaviour
 
     [DllImport("MyAudioPlugin")]
     public static extern void SetMinMaxDistance(float min, float max);
+
+    [DllImport("MyAudioPlugin")]
+    public static extern float AngleValue();
 
     [DllImport("MyAudioPlugin")]
     public static extern float GetListenerX();
@@ -84,7 +87,7 @@ public class MyTestScript : MonoBehaviour
         Debug.Log("Number of sounds: " + ReturnNumOfSounds());
         Debug.Log("Number of channels: " + ReturnNumOfChannels());
 
-
+        
 
 
         SetMinMaxDistance(5.0f, 50.0f);
@@ -102,10 +105,12 @@ public class MyTestScript : MonoBehaviour
         Vector3 pos_of_source = source.transform.position;
         Vector3 nul = Vector3.zero;
 
-        SetListener(pos_of_listener, nul);
+        SetListener(pos_of_listener, listener.transform.forward, listener.transform.up);
         SetSource(pos_of_source);
         ChangeVolumeByDistance(chID);
+
         UpdateAudioEngine();
+        Debug.Log("Angle value: " + AngleValue());
         
     }
 

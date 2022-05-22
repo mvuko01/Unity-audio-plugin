@@ -114,7 +114,7 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 		return 1;
 	}
 	//auto it = sgpImplementation->mSounds.find(strSoundPath);
-
+	return -2;
 	//cout << it->first;
 }
 
@@ -273,10 +273,11 @@ void ChangeVolumeByDistance(int nChannelId)
 
 
 
-void SetListener(Vector3 pos, Vector3 ori) {
+void SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
 	
 	listener.position= pos;
-	listener.orientation= ori;
+	listener.forward = forward;
+	listener.up = up;
 }
 
 void SetSource(Vector3 pos) {
@@ -286,6 +287,98 @@ void SetSource(Vector3 pos) {
 void SetMinMaxDistance(float min, float max) {
 	min_Sound_Distance = min;
 	max_Sound_Distance = max;
+}
+
+
+float VectorDotProduct(Vector3 vec1, Vector3 vec2)
+{
+	float product;
+
+	product = vec1.x * vec2.x;
+	product += vec1.z * vec2.z;
+	product += vec1.y * vec2.y;
+
+
+	return product;
+}
+
+Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2)
+{
+	Vector3 product;
+
+	product.x = vec1.y * vec2.z - vec1.z * vec2.y;
+	product.y = vec1.x * vec2.z - vec1.z * vec2.x;
+	product.z = vec1.x * vec2.y - vec1.y * vec2.x;
+
+	return product;
+
+}
+
+float AngleValue()
+{
+	Vector3 side = VectorCrossProduct(listener.up, listener.forward);
+	side = VectorNormalize(side); 
+	Vector3 difference = VectorSubtract(source.position, listener.position);
+	float x = VectorDotProduct(difference, side);
+	float z = VectorDotProduct(difference, listener.forward);
+	float angleRadians = atan2(x, z);
+	float angleDegrees = angleRadians * (180.0 / 3.14); 
+
+	/*Vector3 difference = VectorSubtract(source.position, listener.position);
+	cout << "Difference: " << difference.x << " " << difference.y << " " << difference.z << endl;
+	
+
+	float dotProduct = VectorDotProduct(difference, listener.forward);
+	cout << "Dot product = " << dotProduct << endl;
+	float magnitudeOfDiff = VectorMagnitude(difference);
+	cout << "Diff magnitude = " << magnitudeOfDiff << endl;
+
+	float magnitudeOfForward = VectorMagnitude(listener.forward);
+	cout << "Forward magnitude = " << magnitudeOfForward << endl;
+
+	float acosArgument = dotProduct / (magnitudeOfDiff * magnitudeOfForward);
+	cout << "Acos argument = " << acosArgument << endl;
+
+	float angleRadians = acos(acosArgument);
+	float angleDegrees = angleRadians * (180.0 / 3.14);*/
+	
+	/*Vector3 difference = VectorSubtract(source.position, listener.position);
+
+	float angleRadians = atan2(difference.z * listener.forward.x - difference.x * listener.forward.z, difference.x * listener.forward.x + difference.z * listener.forward.z);
+	float angleDegrees = angleRadians * (180.0 / 3.14);*/
+
+	return angleDegrees;
+}
+
+float VectorMagnitude(Vector3 vec1)
+{
+	return sqrtf(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z); //vec1.y * vec1.y +
+	 
+}
+
+Vector3 VectorNormalize(Vector3 vec1)
+{
+	Vector3 normalizedVector = {0,0,0};
+	float magnitude = VectorMagnitude(vec1);
+	if (magnitude > 0)
+	{
+		normalizedVector.x = vec1.x / magnitude;
+		normalizedVector.y = vec1.y / magnitude;
+		normalizedVector.z = vec1.z / magnitude;
+
+		return normalizedVector;
+	}
+	return normalizedVector;
+}
+
+Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2)
+{
+	Vector3 rezult;
+	rezult.x = vec1.x - vec2.x;
+	rezult.y = vec1.y - vec2.y;
+	rezult.z = vec1.z - vec2.z;
+
+	return rezult;
 }
 
 
