@@ -62,7 +62,7 @@ extern "C" {
 	DllExport int LoadSound(char* strSoundPath, bool bLooping);
 	DllExport void UnLoadSound(char* strSoundPath);
 	//void Set3dListenerAndOrientation(const Vector3& vPosition, const Vector3& vLook, const Vector3& vUp);
-	DllExport int PlaySounds(char* strSoundPath, float fVolumedB = 0.0f, const Vector3& vPos = Vector3{ 0, 0, 0 });
+	DllExport int PlaySounds(char* strSoundPath);
 
 	//void StopChannel(int nChannelId);
 	DllExport int ReturnNumOfSounds();
@@ -70,9 +70,10 @@ extern "C" {
 
 	//void StopAllChannels();
 	DllExport void SetChannel3dPosition(int nChannelId, const Vector3& vPosition);
-	DllExport void SetChannelVolume(int nChannelId, float fVolumedB);
+	void SetChannelVolume(int nChannelId, float fVolumedB);
+	DllExport void SetChannelPan(int nChannelId, float panValue);
 	//bool IsPlaying(int nChannelId) const;
-
+	
 	
 	FMOD_VECTOR VectorToFmod(const Vector3& vPosition);
 
@@ -83,6 +84,7 @@ extern "C" {
 	DllExport void SetSource(Vector3 pos);
 	DllExport void SetMinMaxDistance(float min, float max);
 	DllExport void ChangeVolumeByDistance(int nChannelId);
+	DllExport float ChangePanByOrientation(int nChannelId);
 
 	DllExport float GetListenerY();
 	DllExport float GetListenerX();

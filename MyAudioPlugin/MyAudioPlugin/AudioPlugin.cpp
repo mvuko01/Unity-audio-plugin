@@ -19,7 +19,9 @@ float max_Sound_Distance;
 Implementation::Implementation() {
 	system = NULL;
 	ErrorCheck(System_Create(&system));
-	ErrorCheck(system->init(2, FMOD_INIT_NORMAL, 0));
+	//ErrorCheck(system->setSoftwareFormat(48000, FMOD_SPEAKERMODE_STEREO, 0));
+	ErrorCheck(system->init(10, FMOD_INIT_NORMAL, 0));
+	
 	mnNextChannelId = 0;
 	
 }
@@ -103,7 +105,7 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 	//definiramo flagove zvuka
 	FMOD_MODE eMode = FMOD_DEFAULT;
 	eMode |= bLooping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
-	eMode |= FMOD_3D;
+	eMode |= FMOD_2D;
 
 	FMOD::Sound* sound = NULL;
 	ErrorCheck(sgpImplementation->system->createSound(pstrSoundPath, eMode, 0, &sound)); 
@@ -177,7 +179,7 @@ void UnLoadSound(char* pstrSoundPath)
 	return nChannelId;
 }*/
 
-int PlaySounds(char* pstrSoundPath, float fVolumedB, const Vector3& vPosition)
+int PlaySounds(char* pstrSoundPath)
 {
 	string strSoundPath(pstrSoundPath);
 
@@ -199,13 +201,8 @@ int PlaySounds(char* pstrSoundPath, float fVolumedB, const Vector3& vPosition)
 	FMOD::Channel* pChannel = nullptr;
 	ErrorCheck(sgpImplementation->system->playSound(tFoundIt->second, nullptr, true, &pChannel));
 	if (pChannel)
-	{
+	{	
 		
-		//cout << "Channel is playing";
-		/*FMOD_VECTOR position = VectorToFmod(vPosition);
-		AudioEngine::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));*/
-		
-		ErrorCheck(pChannel->setVolume(fVolumedB));
 		ErrorCheck(pChannel->setPaused(false));
 		sgpImplementation->mChannels[nChannelId] = pChannel;
 		
@@ -227,7 +224,7 @@ void SetChannel3dPosition(int nChannelId, const Vector3& vPosition)
 
 void SetChannelVolume(int nChannelId, float volume_value)
 {
-	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
+	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId); //ovo se moze stavit u funkciju pošto se ponavlja èesto
 	if (tFoundIt == sgpImplementation->mChannels.end())
 		return;
 
@@ -235,7 +232,15 @@ void SetChannelVolume(int nChannelId, float volume_value)
 	ErrorCheck(tFoundIt->second->setVolume(volume_value));
 }
 
+void SetChannelPan(int nChannelId, float panValue)
+{
+	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
+	if (tFoundIt == sgpImplementation->mChannels.end())
+		return;
 
+
+	ErrorCheck(tFoundIt->second->setPan(panValue));
+}
 
 FMOD_VECTOR VectorToFmod(const Vector3& vPosition) {
 	FMOD_VECTOR fVec;
@@ -254,6 +259,8 @@ int ErrorCheck(FMOD_RESULT result) {
 	return 0;
 }
 
+
+
 void ChangeVolumeByDistance(int nChannelId)
 {
 	float distance = 0;
@@ -268,9 +275,26 @@ void ChangeVolumeByDistance(int nChannelId)
 		volume = 1  - ((distance - min_Sound_Distance) / (max_Sound_Distance - min_Sound_Distance));
 	
 	SetChannelVolume(nChannelId, volume);
+	
 	return;
 }
 
+
+float ChangePanByOrientation(int nChannelId)
+{
+	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
+	if (tFoundIt == sgpImplementation->mChannels.end())
+		return 0;
+
+	float angle = AngleValue();
+
+	float panValue = sin(angle);
+	//float side = cos(angle);
+
+	SetChannelPan(nChannelId, panValue);
+
+	return panValue;
+}
 
 
 void SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
@@ -316,9 +340,19 @@ Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2)
 
 float AngleValue()
 {
+	Vector3 tempForward;
+	tempForward.x = listener.forward.x;
+	tempForward.z = listener.forward.z;
+	tempForward.y = 0;
+
 	Vector3 side = VectorCrossProduct(listener.up, listener.forward);
 	side = VectorNormalize(side); 
+	//side.y = 0;
 	Vector3 difference = VectorSubtract(source.position, listener.position);
+	//difference.y = 0;
+
+	
+
 	float x = VectorDotProduct(difference, side);
 	float z = VectorDotProduct(difference, listener.forward);
 	float angleRadians = atan2(x, z);
@@ -347,7 +381,7 @@ float AngleValue()
 	float angleRadians = atan2(difference.z * listener.forward.x - difference.x * listener.forward.z, difference.x * listener.forward.x + difference.z * listener.forward.z);
 	float angleDegrees = angleRadians * (180.0 / 3.14);*/
 
-	return angleDegrees;
+	return angleRadians;
 }
 
 float VectorMagnitude(Vector3 vec1)

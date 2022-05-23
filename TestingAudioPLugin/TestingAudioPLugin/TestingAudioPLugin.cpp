@@ -13,48 +13,42 @@ using namespace std;
 int main()
 {
 	
-	Vector3 vec = { 0.0f,0.0f,0.0f };
-
-
-	Vector3 a = { 4.0f,-2.0f, 5.0f };
-	Vector3 b = { -1.0f, 3.0f, -6.0f };
-	Vector3 c = { 7.0f, -5.0f, 1.0f };
-
-	Vector3 rez = VectorCrossProduct(b, a);
-	cout << "a x b: " << rez.x << " " << rez.y << " " << rez.z;
-
-
-	rez = VectorCrossProduct(b, c);
-	cout << "b x c: " << rez.x << " " << rez.y << " " << rez.z;
-
-
-	rez = VectorCrossProduct(a, c);
-	cout << "a x c: " << rez.x << " " << rez.y << " " << rez.z;
-
-	rez = VectorNormalize(a);
-	cout << "Normalized a: " << rez.x << " " << rez.y << " " << rez.z<<endl;
+	
 	
 	AudioSource source;
 	AudioListener listener;
 
-	source.position = { 30.0f, 100.0f, -30.0f };
-	listener.position = { 30.0f, 0.0f, 0.0f };
-	listener.forward = { 0.0f, 0.0f, 1.0f };
+	source.position = { 30.0f, 0.0f, 0.0f };
+	listener.position = { 0.0f, 0.0f, 0.0f };
+	listener.forward = { 0.0f, 0.0f, -1.0f };
 	listener.up = { 0.0f, 1.0f, 0.0f };
 
-	float angle = AngleValue(listener, source);
+	SetListener(listener.position, listener.forward, listener.up);
+	SetSource(source.position);
+
+	float angle = AngleValue();
+
+	float panValue = sin(angle);
+	float side = cos(angle);
+
+	
+
 
 	cout << endl << "Angle is "<< angle;
-	//InitAudioEngine();
+	cout << endl << "Pan is " << panValue;
+
+	InitAudioEngine();
 	//
-	//LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", true);
+	LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", true);
 	////LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", false);
-	//PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", 1.25f);
+	int id = PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav");
+
+	SetChannelPan(id, -1);
 	////PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", 50);
 	//
-	//while (1) {
-	//	UpdateAudioEngine();
-	//}
+	while (1) {
+		UpdateAudioEngine();
+	}
 	
 	/*vec3 side = cross(listener.up, listener.look_at);
 	side.normalize(); 

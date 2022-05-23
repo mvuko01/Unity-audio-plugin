@@ -21,7 +21,7 @@ public class MyTestScript : MonoBehaviour
     public static extern int LoadSound(string path, bool loop);
 
     [DllImport("MyAudioPlugin")]
-    public static extern int PlaySounds(string path, float volume);
+    public static extern int PlaySounds(string path);
 
     [DllImport("MyAudioPlugin")]
     public static extern int ReturnNumOfSounds();
@@ -37,6 +37,9 @@ public class MyTestScript : MonoBehaviour
 
     [DllImport("MyAudioPlugin")]
     public static extern void ChangeVolumeByDistance(int channelID);
+
+    [DllImport("MyAudioPlugin")]
+    public static extern float ChangePanByOrientation(int channelID);
 
     [DllImport("MyAudioPlugin")]
     public static extern void SetMinMaxDistance(float min, float max);
@@ -78,7 +81,7 @@ public class MyTestScript : MonoBehaviour
         //rez = LoadSound(secondPath, false);
         //Debug.Log("Rezult of LoadSound second: " + rez);
 
-        chID = PlaySounds(firstPath, 0.0f);
+        chID = PlaySounds(firstPath);
         Debug.Log("ChannelID of PlaySound first: " + chID);
 
         //rez = PlaySounds(secondPath, 0.0f);
@@ -91,10 +94,12 @@ public class MyTestScript : MonoBehaviour
 
 
         SetMinMaxDistance(5.0f, 50.0f);
-        
 
-        
-        
+        Debug.Log("Up value: " + Vector3.up);
+        //Debug.Log("Angle value: " + AngleValue());
+
+
+
 
     }
 
@@ -105,13 +110,20 @@ public class MyTestScript : MonoBehaviour
         Vector3 pos_of_source = source.transform.position;
         Vector3 nul = Vector3.zero;
 
-        SetListener(pos_of_listener, listener.transform.forward, listener.transform.up);
+        SetListener(pos_of_listener, listener.transform.forward, Vector3.up);
         SetSource(pos_of_source);
         ChangeVolumeByDistance(chID);
-
+        float panVal = ChangePanByOrientation(chID);
         UpdateAudioEngine();
-        Debug.Log("Angle value: " + AngleValue());
-        
+        //Debug.Log("Angle value: " + AngleValue());
+        Debug.Log("Pan value: " + panVal);
+
+        //Debug.Log("Angle value: " + listener.transform.forward);
+
+
+        //Debug.Log("Up value: " + Vector3.forward);
+
+
     }
 
     private void OnApplicationQuit()
