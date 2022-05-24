@@ -6,12 +6,29 @@
 #include "TestingAudioPLugin.h"
 
 
+class Dog {
+public:
+	string name = "Keith";
 
+
+};
+
+struct Dawg {
+	string name = "puppy";
+
+};
 
 using namespace std;
 
 int main()
 {
+	Dog* dog = nullptr;
+
+	dog = new Dog;
+	Dawg dawg;
+
+
+	cout << dawg.name;
 	
 	
 	

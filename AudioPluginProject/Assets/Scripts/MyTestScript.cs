@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using UnityEditor;
 using UnityEngine;
@@ -47,17 +48,9 @@ public class MyTestScript : MonoBehaviour
     [DllImport("MyAudioPlugin")]
     public static extern float AngleValue();
 
-    [DllImport("MyAudioPlugin")]
-    public static extern float GetListenerX();
 
-    [DllImport("MyAudioPlugin")]
-    public static extern float GetListenerY();
-
-    [DllImport("MyAudioPlugin")]
-    public static extern float GetListenerZ();
-
-    public AudioClip firstClip;
-    public AudioClip secondClip;
+    //public AudioClip firstClip;
+    //public AudioClip secondClip;
     public GameObject listener;
     public GameObject source;
 
@@ -67,14 +60,18 @@ public class MyTestScript : MonoBehaviour
     void Start()
     {
 
-        string firstPath = AssetDatabase.GetAssetPath(firstClip.GetInstanceID());
-        string secondPath = AssetDatabase.GetAssetPath(secondClip.GetInstanceID());
 
+        // string path = Application.streamingAssetsPath;
+        //string firstPath = AssetDatabase.GetAssetPath(firstClip.GetInstanceID());
+        // string secondPath = AssetDatabase.GetAssetPath(secondClip.GetInstanceID());
+
+        string firstPath = Path.Combine(Application.streamingAssetsPath, "singing.wav");
+        Debug.Log(" path " + firstPath);
         
 
         InitAudioEngine();
         int rez = LoadSound(firstPath, true);
-        Debug.Log("Rezult of LoadSound first: " + rez);
+       // Debug.Log("Rezult of LoadSound first: " + rez);
 
       
 
@@ -82,20 +79,20 @@ public class MyTestScript : MonoBehaviour
         //Debug.Log("Rezult of LoadSound second: " + rez);
 
         chID = PlaySounds(firstPath);
-        Debug.Log("ChannelID of PlaySound first: " + chID);
+        //Debug.Log("ChannelID of PlaySound first: " + chID);
 
         //rez = PlaySounds(secondPath, 0.0f);
         //Debug.Log("Rezult of PlaySound second: " + rez);
         //PlaySounds(secondPath, 0.0f);
-        Debug.Log("Number of sounds: " + ReturnNumOfSounds());
-        Debug.Log("Number of channels: " + ReturnNumOfChannels());
+      //  Debug.Log("Number of sounds: " + ReturnNumOfSounds());
+        //Debug.Log("Number of channels: " + ReturnNumOfChannels());
 
         
 
 
         SetMinMaxDistance(5.0f, 50.0f);
 
-        Debug.Log("Up value: " + Vector3.up);
+       
         //Debug.Log("Angle value: " + AngleValue());
 
 
@@ -116,7 +113,7 @@ public class MyTestScript : MonoBehaviour
         float panVal = ChangePanByOrientation(chID);
         UpdateAudioEngine();
         //Debug.Log("Angle value: " + AngleValue());
-        Debug.Log("Pan value: " + panVal);
+        //Debug.Log("Pan value: " + panVal);
 
         //Debug.Log("Angle value: " + listener.transform.forward);
 

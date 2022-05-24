@@ -10,25 +10,20 @@ using namespace FMOD;
 
 
 Implementation* sgpImplementation = nullptr;
-AudioListener listener;
-AudioSource source;
-float min_Sound_Distance;
-float max_Sound_Distance;
+SpatializerData spatializerData;
+
 
 
 Implementation::Implementation() {
 	system = NULL;
 	ErrorCheck(System_Create(&system));
-	//ErrorCheck(system->setSoftwareFormat(48000, FMOD_SPEAKERMODE_STEREO, 0));
 	ErrorCheck(system->init(10, FMOD_INIT_NORMAL, 0));
 	
 	mnNextChannelId = 0;
-	
 }
 
 Implementation::~Implementation() {
 	ErrorCheck(system->release());
-	
 }
 
 void Implementation::Update() {
@@ -45,26 +40,22 @@ void Implementation::Update() {
 			pStoppedChannels.push_back(it);
 		}
 	}
+	
 
-	//druga petlja brise one kanale koji su zaustavljeni iz mape
 	for (auto& it : pStoppedChannels)
 	{
 		
 		mChannels.erase(it);
 	}
 	
-	//cout << "My sound size: " << mSounds.size() << endl;
-
 	ErrorCheck(system->update());
 }
 
 
-
-
  void  InitAudioEngine() {
 	sgpImplementation = new Implementation;
-	min_Sound_Distance = 5.0f;
-	max_Sound_Distance = 35.0f;
+	spatializerData.min_Sound_Distance = 5.0f;
+	spatializerData.max_Sound_Distance = 35.0f;
 }
 
 void  UpdateAudioEngine() {
@@ -76,21 +67,6 @@ void ShutdownAudioEngine() {
 }
 
 
-/*void AudioEngine::LoadSound(const std::string& strSoundName, bool b3d, bool bLooping, bool bStream)
-{
-	auto tFoundIt = sgpImplementation->mSounds.find(strSoundName);
-	if (tFoundIt != sgpImplementation->mSounds.end())
-		return;
-	FMOD_MODE eMode = FMOD_DEFAULT;
-	eMode |= b3d ? FMOD_3D : FMOD_2D;
-	eMode |= bLooping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
-	eMode |= bStream ? FMOD_CREATESTREAM : FMOD_CREATECOMPRESSEDSAMPLE;
-	FMOD::Sound* pSound = nullptr;
-	AudioEngine::ErrorCheck(sgpImplementation->system->createSound(strSoundName.c_str(), eMode, nullptr, &pSound));
-	if (pSound) {
-		sgpImplementation->mSounds[strSoundName] = pSound;
-	}
-}*/
 
 int LoadSound(char* pstrSoundPath, bool bLooping)
 {
@@ -148,36 +124,7 @@ void UnLoadSound(char* pstrSoundPath)
 
 
 
-/*int AudioEngine::PlaySounds(const string& strSoundName, const Vector3& vPosition, float fVolumedB)
-{
-	int nChannelId = sgpImplementation->mnNextChannelId++;
-	auto tFoundIt = sgpImplementation->mSounds.find(strSoundName);
-	if (tFoundIt == sgpImplementation->mSounds.end())
-	{
-		LoadSound(strSoundName);
-		tFoundIt = sgpImplementation->mSounds.find(strSoundName);
-		if (tFoundIt == sgpImplementation->mSounds.end())
-		{
-			return nChannelId;
-		}
-	}
 
-	FMOD::Channel* pChannel = nullptr;
-	AudioEngine::ErrorCheck(sgpImplementation->system->playSound(tFoundIt->second, nullptr, true, &pChannel));
-	if (pChannel)
-	{
-		FMOD_MODE currMode;
-		tFoundIt->second->getMode(&currMode);
-		if (currMode & FMOD_3D) {
-			FMOD_VECTOR position = VectorToFmod(vPosition);
-			AudioEngine::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));
-		}
-		AudioEngine::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
-		AudioEngine::ErrorCheck(pChannel->setPaused(false));
-		sgpImplementation->mChannels[nChannelId] = pChannel;
-	}
-	return nChannelId;
-}*/
 
 int PlaySounds(char* pstrSoundPath)
 {
@@ -212,15 +159,6 @@ int PlaySounds(char* pstrSoundPath)
 }
 
 
-void SetChannel3dPosition(int nChannelId, const Vector3& vPosition)
-{
-	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
-	if (tFoundIt == sgpImplementation->mChannels.end())
-		return;
-
-	FMOD_VECTOR position = VectorToFmod(vPosition);
-	ErrorCheck(tFoundIt->second->set3DAttributes(&position, NULL));
-}
 
 void SetChannelVolume(int nChannelId, float volume_value)
 {
@@ -266,13 +204,13 @@ void ChangeVolumeByDistance(int nChannelId)
 	float distance = 0;
 	float volume = 0;
 
-	distance = sqrt(pow(listener.position.x - source.position.x, 2) + pow(listener.position.y - source.position.y, 2) + pow(listener.position.z - source.position.z, 2));
-	if (distance <= min_Sound_Distance)
+	distance = sqrt(pow(spatializerData.listener.position.x - spatializerData.source.position.x, 2) + pow(spatializerData.listener.position.y - spatializerData.source.position.y, 2) + pow(spatializerData.listener.position.z - spatializerData.source.position.z, 2));
+	if (distance <= spatializerData.min_Sound_Distance)
 		volume = 1.2f;
-	else if (distance >= max_Sound_Distance)
+	else if (distance >= spatializerData.max_Sound_Distance)
 		volume = 0.0f;
 	else
-		volume = 1  - ((distance - min_Sound_Distance) / (max_Sound_Distance - min_Sound_Distance));
+		volume = 1  - ((distance - spatializerData.min_Sound_Distance) / (spatializerData.max_Sound_Distance - spatializerData.min_Sound_Distance));
 	
 	SetChannelVolume(nChannelId, volume);
 	
@@ -299,18 +237,18 @@ float ChangePanByOrientation(int nChannelId)
 
 void SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
 	
-	listener.position= pos;
-	listener.forward = forward;
-	listener.up = up;
+	spatializerData.listener.position= pos;
+	spatializerData.listener.forward = forward;
+	spatializerData.listener.up = up;
 }
 
 void SetSource(Vector3 pos) {
-	source.position = pos;
+	spatializerData.source.position = pos;
 }
 
 void SetMinMaxDistance(float min, float max) {
-	min_Sound_Distance = min;
-	max_Sound_Distance = max;
+	spatializerData.min_Sound_Distance = min;
+	spatializerData.max_Sound_Distance = max;
 }
 
 
@@ -341,20 +279,21 @@ Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2)
 float AngleValue()
 {
 	Vector3 tempForward;
-	tempForward.x = listener.forward.x;
-	tempForward.z = listener.forward.z;
+	tempForward.x = spatializerData.listener.forward.x;
+	tempForward.z = spatializerData.listener.forward.z;
 	tempForward.y = 0;
+	
 
-	Vector3 side = VectorCrossProduct(listener.up, listener.forward);
+	Vector3 side = VectorCrossProduct(spatializerData.listener.up, spatializerData.listener.forward);
 	side = VectorNormalize(side); 
 	//side.y = 0;
-	Vector3 difference = VectorSubtract(source.position, listener.position);
+	Vector3 difference = VectorSubtract(spatializerData.source.position, spatializerData.listener.position);
 	//difference.y = 0;
 
 	
 
 	float x = VectorDotProduct(difference, side);
-	float z = VectorDotProduct(difference, listener.forward);
+	float z = VectorDotProduct(difference, spatializerData.listener.forward);
 	float angleRadians = atan2(x, z);
 	float angleDegrees = angleRadians * (180.0 / 3.14); 
 
@@ -415,147 +354,3 @@ Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2)
 	return rezult;
 }
 
-
-float GetListenerX()
-{
-	return listener.position.x;
-}
-
-float GetListenerY() 
-{
-	return listener.position.y;
-}
-
-float GetListenerZ()
-{
-	return listener.position.x;
-}
-
-/*void ErrorCheck(FMOD_RESULT result)
-{
-	if (result != FMOD_OK) {
-		printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-		exit(-1);
-	}
-}*/
-
-
-/*extern "C" {
-
-
-	 void  DllExport Spatialize(AudioPositionVectors source, AudioPositionVectors listener, char* url, AudioPositionVectors source2, char* url2)
-	{
-
-		FMOD_RESULT result;
-
-		System* system = NULL;
-		result = System_Create(&system);
-		ErrorCheck(result);
-
-
-		result = system->init(2, FMOD_INIT_NORMAL, 0);
-		ErrorCheck(result);
-
-
-		FMOD::Sound* sound = NULL;
-		FMOD::Sound* sound2 = NULL;
-		result = system->createSound(url, FMOD_3D_LINEARROLLOFF, 0, &sound);
-		ErrorCheck(result);
-		
-		if (url2 != NULL)
-		{
-			result = system->createSound(url2, FMOD_3D_LINEARROLLOFF, 0, &sound2);
-			ErrorCheck(result);
-		}
-
-		FMOD::Channel* channel = NULL;
-		FMOD::Channel* channel2 = NULL;
-		result = system->playSound(sound, 0, false, &channel);
-		ErrorCheck(result);
-
-		if (url2 != NULL)
-		{
-			result = system->playSound(sound2, 0, false, &channel2);
-			ErrorCheck(result);
-		}
-
-		channel->set3DAttributes(&source.position, &source.velocity);
-		channel->set3DMinMaxDistance(1.0f, 100.0f);
-
-		if (url2 != NULL)
-		{
-			channel2->set3DAttributes(&source2.position, &source2.velocity);
-			channel2->set3DMinMaxDistance(1.0f, 100.0f);
-		}
-
-		system->set3DListenerAttributes(0, &listener.position, &listener.velocity, &listener.forward, &listener.up);
-		
-		bool isPlaying = false;
-		do {
-			//std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-
-
-			channel->isPlaying(&isPlaying);
-			system->update();
-			
-		} while (isPlaying);
-	}
-
-
-
-
-
-
-
-	DllExport void  Initialize(char* url)
-	{
-		FMOD_RESULT result;
-
-		System* system = NULL;
-		result = System_Create(&system);
-
-		ErrorCheck(result);
-
-
-		result = system->init(100, FMOD_INIT_NORMAL, 0); //prvi broj je koliko kanala odjednom mozes instacirati
-
-
-
-		if (result != FMOD_OK)
-		{
-			printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-			exit(-1);
-		}
-
-		FMOD::Sound* sound = NULL;
-		result = system->createSound(url, FMOD_3D, 0, &sound);
-		if (result != FMOD_OK)
-		{
-			printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-			exit(-1);
-		}
-
-		FMOD::Channel* channel = NULL;
-		result = system->playSound(sound, 0, false, &channel);
-		if (result != FMOD_OK)
-		{
-			printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-			exit(-1);
-		}
-
-		bool isPlaying = false;
-		do {
-			//std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-
-
-			channel->isPlaying(&isPlaying);
-
-			system->update();
-		} while (isPlaying);
-
-	}
-
-	
-}*/

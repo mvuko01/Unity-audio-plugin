@@ -22,13 +22,12 @@ struct Vector3 {
 };
 
 
-struct Implementation {
+class Implementation {
+public:
 	Implementation();
 	~Implementation();
-
 	void Update();
 
-	
 	FMOD::System* system;
 
 	int mnNextChannelId;
@@ -37,6 +36,7 @@ struct Implementation {
 	typedef map<int, FMOD::Channel*> ChannelMap;
 	SoundMap mSounds;
 	ChannelMap mChannels;
+
 };
 
 struct AudioListener {
@@ -48,6 +48,16 @@ struct AudioListener {
 struct AudioSource {
 	Vector3 position;
 };
+
+struct SpatializerData {
+	AudioListener listener;
+	AudioSource source;
+	float min_Sound_Distance;
+	float max_Sound_Distance;
+
+};
+
+
 
 
 extern "C" {
@@ -69,7 +79,6 @@ extern "C" {
 	DllExport int ReturnNumOfChannels();
 
 	//void StopAllChannels();
-	DllExport void SetChannel3dPosition(int nChannelId, const Vector3& vPosition);
 	void SetChannelVolume(int nChannelId, float fVolumedB);
 	DllExport void SetChannelPan(int nChannelId, float panValue);
 	//bool IsPlaying(int nChannelId) const;
@@ -86,9 +95,6 @@ extern "C" {
 	DllExport void ChangeVolumeByDistance(int nChannelId);
 	DllExport float ChangePanByOrientation(int nChannelId);
 
-	DllExport float GetListenerY();
-	DllExport float GetListenerX();
-	DllExport float GetListenerZ();
 
 
 	/*Utility --- vecina ovih ne treba dllexport*/
@@ -103,17 +109,3 @@ extern "C" {
 }
 
 
-
-/*extern "C" {
-
-	typedef struct {
-	FMOD_VECTOR position;
-	FMOD_VECTOR velocity;
-	FMOD_VECTOR direction;
-	FMOD_VECTOR forward;
-	FMOD_VECTOR up;
-} AudioPositionVectors;
-	DllExport void Spatialize(AudioPositionVectors source, AudioPositionVectors listener, char* url, AudioPositionVectors source2, char* url2);
-	DllExport void  Initialize(char* url);
-
-}*/
