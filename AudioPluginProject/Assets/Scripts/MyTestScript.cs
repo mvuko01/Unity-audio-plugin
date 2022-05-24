@@ -46,48 +46,71 @@ public class MyTestScript : MonoBehaviour
     public static extern void SetMinMaxDistance(float min, float max);
 
     [DllImport("MyAudioPlugin")]
-    public static extern float AngleValue();
+    public static extern int ArrayOfSources(Vector3[] array, int size);
+
+    [DllImport("MyAudioPlugin")]
+    public static extern float GetXofSecond();
 
 
     //public AudioClip firstClip;
     //public AudioClip secondClip;
     public GameObject listener;
     public GameObject source;
+    public GameObject[] sources;
 
     int chID;
-    
+
 
     void Start()
     {
 
-
+        InitAudioEngine();
         // string path = Application.streamingAssetsPath;
         //string firstPath = AssetDatabase.GetAssetPath(firstClip.GetInstanceID());
         // string secondPath = AssetDatabase.GetAssetPath(secondClip.GetInstanceID());
+        DirectoryInfo dir = new DirectoryInfo(Application.streamingAssetsPath);
+        FileInfo[] allFile = dir.GetFiles("*.wav");
+        string path;
 
-        string firstPath = Path.Combine(Application.streamingAssetsPath, "singing.wav");
-        Debug.Log(" path " + firstPath);
-        
+        foreach (FileInfo file in allFile)
+        {
+            // Debug.Log(file.Name);
+            path = Path.Combine(Application.streamingAssetsPath, file.Name);
+            Debug.Log(path);
+            LoadSound(path, false);
 
-        InitAudioEngine();
-        int rez = LoadSound(firstPath, true);
-       // Debug.Log("Rezult of LoadSound first: " + rez);
+        }
 
-      
+        Vector3[] sourcePositionArray = new Vector3[sources.Length];
 
-        //rez = LoadSound(secondPath, false);
-        //Debug.Log("Rezult of LoadSound second: " + rez);
+        for (int i = 0; i < sources.Length; i++)
+        {
+            sourcePositionArray[i] = sources[i].transform.position;
+            Debug.Log(sourcePositionArray[i]);
+        }
 
-        chID = PlaySounds(firstPath);
+        ArrayOfSources(sourcePositionArray, sources.Length);
+        Debug.Log("X of second source: " + GetXofSecond());
+        //string firstPath = Path.Combine(Application.streamingAssetsPath, "singing.wav");
+        // Debug.Log(" path " + firstPath);
+
+
+
+        // int rez = LoadSound(firstPath, false);
+        //chID = PlaySounds(firstPath);
+
+
+
         //Debug.Log("ChannelID of PlaySound first: " + chID);
 
         //rez = PlaySounds(secondPath, 0.0f);
         //Debug.Log("Rezult of PlaySound second: " + rez);
         //PlaySounds(secondPath, 0.0f);
-      //  Debug.Log("Number of sounds: " + ReturnNumOfSounds());
-        //Debug.Log("Number of channels: " + ReturnNumOfChannels());
+        Debug.Log("Number of channels: " + ReturnNumOfChannels());
+        Debug.Log("Number of sounds: " + ReturnNumOfSounds());
 
-        
+
+
 
 
         SetMinMaxDistance(5.0f, 50.0f);
@@ -109,12 +132,11 @@ public class MyTestScript : MonoBehaviour
 
         SetListener(pos_of_listener, listener.transform.forward, Vector3.up);
         SetSource(pos_of_source);
-        ChangeVolumeByDistance(chID);
-        float panVal = ChangePanByOrientation(chID);
+       // ChangeVolumeByDistance(chID);
+        //float panVal = ChangePanByOrientation(chID);
         UpdateAudioEngine();
         //Debug.Log("Angle value: " + AngleValue());
         //Debug.Log("Pan value: " + panVal);
-
         //Debug.Log("Angle value: " + listener.transform.forward);
 
 

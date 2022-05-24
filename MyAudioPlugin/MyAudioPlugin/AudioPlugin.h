@@ -2,8 +2,9 @@
 
 #include <fmod.hpp>
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
+#include "Utility.h"
 
 
 #ifdef DLL_EXPORTS
@@ -14,12 +15,6 @@
 
 using namespace std;
 
-
-struct Vector3 {
-	float x;
-	float y;
-	float z;
-};
 
 
 class Implementation {
@@ -54,10 +49,9 @@ struct SpatializerData {
 	AudioSource source;
 	float min_Sound_Distance;
 	float max_Sound_Distance;
-
+	AudioSource* pSourceArray;
+	int numberOfSources;
 };
-
-
 
 
 extern "C" {
@@ -71,20 +65,23 @@ extern "C" {
 
 	DllExport int LoadSound(char* strSoundPath, bool bLooping);
 	DllExport void UnLoadSound(char* strSoundPath);
-	//void Set3dListenerAndOrientation(const Vector3& vPosition, const Vector3& vLook, const Vector3& vUp);
+	
 	DllExport int PlaySounds(char* strSoundPath);
 
 	//void StopChannel(int nChannelId);
-	DllExport int ReturnNumOfSounds();
-	DllExport int ReturnNumOfChannels();
-
 	//void StopAllChannels();
-	void SetChannelVolume(int nChannelId, float fVolumedB);
-	DllExport void SetChannelPan(int nChannelId, float panValue);
 	//bool IsPlaying(int nChannelId) const;
+
+	DllExport int ReturnNumOfSounds(); //ove su sluzile za testiranje, ne treba dllexport
+	DllExport int ReturnNumOfChannels(); //
+
+	
+	void SetChannelVolume(int nChannelId, float fVolumedB);
+	void SetChannelPan(int nChannelId, float panValue);
+	float AngleValue();
 	
 	
-	FMOD_VECTOR VectorToFmod(const Vector3& vPosition);
+	FMOD_VECTOR VectorToFmod(const Vector3& vPosition); //mislim da ovu funkciju niti ne korismi nigdi
 
 	
 	/*Moje funkcije*/
@@ -95,17 +92,10 @@ extern "C" {
 	DllExport void ChangeVolumeByDistance(int nChannelId);
 	DllExport float ChangePanByOrientation(int nChannelId);
 
+	DllExport int SetSources(Vector3* array, int size);
+	
 
-
-	/*Utility --- vecina ovih ne treba dllexport*/
-
-	DllExport float VectorDotProduct(Vector3 vec1, Vector3 vec2);
-
-	DllExport Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2);
-	DllExport Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2);
-	DllExport float AngleValue();
-	DllExport Vector3 VectorNormalize(Vector3 vec1);
-	float VectorMagnitude(Vector3 vec1);
+	
 }
 
 

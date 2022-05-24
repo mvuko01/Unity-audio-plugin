@@ -14,7 +14,8 @@ public:
 };
 
 struct Dawg {
-	string name = "puppy";
+	string name;
+	int a;
 
 };
 
@@ -24,8 +25,10 @@ int main()
 {
 	Dog* dog = nullptr;
 
-	dog = new Dog;
-	Dawg dawg;
+	
+	Dawg varijabla;
+
+	varijabla.a
 
 
 	cout << dawg.name;

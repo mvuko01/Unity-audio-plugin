@@ -3911,6 +3911,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4661435515762813124, guid: e289bf5debb17f6459818c207d781953, type: 3}
   m_PrefabInstance: {fileID: 969187714}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &979141965 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8783306491908617939, guid: f02116c209ecd9e488fc4d2cd8996133, type: 3}
+  m_PrefabInstance: {fileID: 123753505}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1056159471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4415,10 +4420,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf42c7e324d887468a2b74ef1273bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstClip: {fileID: 8300000, guid: 09c4aa79fdaf5e943bcf05e0df0b7546, type: 3}
-  secondClip: {fileID: 8300000, guid: d0f6f5939e0678847ad86372a9d59393, type: 3}
   listener: {fileID: 1136385240}
   source: {fileID: 739732978}
+  sources:
+  - {fileID: 739732978}
+  - {fileID: 979141965}
 --- !u!114 &1136385245
 MonoBehaviour:
   m_ObjectHideFlags: 0

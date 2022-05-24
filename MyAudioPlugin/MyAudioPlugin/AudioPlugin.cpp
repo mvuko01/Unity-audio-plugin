@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <fmod_errors.h>
 #include <fmod_common.h>
 #include <thread>
@@ -252,54 +251,30 @@ void SetMinMaxDistance(float min, float max) {
 }
 
 
-float VectorDotProduct(Vector3 vec1, Vector3 vec2)
-{
-	float product;
-
-	product = vec1.x * vec2.x;
-	product += vec1.z * vec2.z;
-	product += vec1.y * vec2.y;
-
-
-	return product;
-}
-
-Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2)
-{
-	Vector3 product;
-
-	product.x = vec1.y * vec2.z - vec1.z * vec2.y;
-	product.y = vec1.x * vec2.z - vec1.z * vec2.x;
-	product.z = vec1.x * vec2.y - vec1.y * vec2.x;
-
-	return product;
-
-}
-
 float AngleValue()
 {
 	Vector3 tempForward;
 	tempForward.x = spatializerData.listener.forward.x;
 	tempForward.z = spatializerData.listener.forward.z;
 	tempForward.y = 0;
-	
+
 
 	Vector3 side = VectorCrossProduct(spatializerData.listener.up, spatializerData.listener.forward);
-	side = VectorNormalize(side); 
+	side = VectorNormalize(side);
 	//side.y = 0;
 	Vector3 difference = VectorSubtract(spatializerData.source.position, spatializerData.listener.position);
 	//difference.y = 0;
 
-	
+
 
 	float x = VectorDotProduct(difference, side);
 	float z = VectorDotProduct(difference, spatializerData.listener.forward);
 	float angleRadians = atan2(x, z);
-	float angleDegrees = angleRadians * (180.0 / 3.14); 
+	float angleDegrees = angleRadians * (180.0 / 3.14);
 
 	/*Vector3 difference = VectorSubtract(source.position, listener.position);
 	cout << "Difference: " << difference.x << " " << difference.y << " " << difference.z << endl;
-	
+
 
 	float dotProduct = VectorDotProduct(difference, listener.forward);
 	cout << "Dot product = " << dotProduct << endl;
@@ -314,7 +289,7 @@ float AngleValue()
 
 	float angleRadians = acos(acosArgument);
 	float angleDegrees = angleRadians * (180.0 / 3.14);*/
-	
+
 	/*Vector3 difference = VectorSubtract(source.position, listener.position);
 
 	float angleRadians = atan2(difference.z * listener.forward.x - difference.x * listener.forward.z, difference.x * listener.forward.x + difference.z * listener.forward.z);
@@ -323,34 +298,18 @@ float AngleValue()
 	return angleRadians;
 }
 
-float VectorMagnitude(Vector3 vec1)
+int SetSources(Vector3* array, int size) //tribalo bi radit, ako slucajno pristupis i-tom elementu koji je veci od sizea, vratit ce neki nasumicni broj
 {
-	return sqrtf(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z); //vec1.y * vec1.y +
-	 
-}
+	spatializerData.pSourceArray = new AudioSource[size];
+	spatializerData.numberOfSources = size;
 
-Vector3 VectorNormalize(Vector3 vec1)
-{
-	Vector3 normalizedVector = {0,0,0};
-	float magnitude = VectorMagnitude(vec1);
-	if (magnitude > 0)
+	for (int i = 0; i < size; i++)
 	{
-		normalizedVector.x = vec1.x / magnitude;
-		normalizedVector.y = vec1.y / magnitude;
-		normalizedVector.z = vec1.z / magnitude;
-
-		return normalizedVector;
+		spatializerData.pSourceArray[i].position = array[i];
+	
 	}
-	return normalizedVector;
+	
+	return 0;
 }
 
-Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2)
-{
-	Vector3 rezult;
-	rezult.x = vec1.x - vec2.x;
-	rezult.y = vec1.y - vec2.y;
-	rezult.z = vec1.z - vec2.z;
-
-	return rezult;
-}
 
