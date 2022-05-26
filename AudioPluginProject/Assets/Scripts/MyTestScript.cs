@@ -14,7 +14,7 @@ public class AudioSourceObjects
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct AudioSourceField
+public struct AudioSourceStruct
 {
    public Vector3 position;
     public float min;
@@ -50,23 +50,23 @@ public class MyTestScript : MonoBehaviour
     public static extern void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
 
     [DllImport("MyAudioPlugin")]
-    public static extern int SetSources(Vector3[] array, int size);
+    public static extern int SetSources(AudioSourceStruct[] array, int size);
 
 
-    [DllImport("MyAudioPlugin")]
-    public static extern void SetMinMaxDistance(float min, float max);
-
+   
 
     [DllImport("MyAudioPlugin")]
     public static extern int SpatializeSourcesAndAudio();
+
+   
 
 
 
     //public AudioClip firstClip;
     //public AudioClip secondClip;
     public GameObject listener;
-    public AudioSourceObjects[] srcs;
-    public GameObject[] sources;
+    public AudioSourceObjects[] sourceObjects;
+   
 
     int chID;
 
@@ -78,17 +78,8 @@ public class MyTestScript : MonoBehaviour
 
         InitAudioEngine();
 
-        AudioSourceField[] test = new AudioSourceField[srcs.Length];
-
-        for (int i = 0; i < srcs.Length; i++)
-        {
-            test[i].position = srcs[i].sources.transform.position;
-            test[i].min = srcs[i].min;
-            test[i].max = srcs[i].max;
-
-        }
-
-
+        
+        
 
 
         DirectoryInfo dir = new DirectoryInfo(Application.streamingAssetsPath);
@@ -127,7 +118,7 @@ public class MyTestScript : MonoBehaviour
 
 
 
-        SetMinMaxDistance(5.0f, 50.0f);
+        
 
        
         //Debug.Log("Angle value: " + AngleValue());
@@ -144,14 +135,17 @@ public class MyTestScript : MonoBehaviour
         Vector3 nul = Vector3.zero;
         SetListener(pos_of_listener, listener.transform.forward, Vector3.up);
 
-        Vector3[] sourcePositionArray = new Vector3[sources.Length];
+        AudioSourceStruct[] sources = new AudioSourceStruct[sourceObjects.Length];
 
-        for (int i = 0; i < sources.Length; i++)
+        for (int i = 0; i < sourceObjects.Length; i++)
         {
-            sourcePositionArray[i] = sources[i].transform.position;
-            Debug.Log(sourcePositionArray[i]);
+            sources[i].position = sourceObjects[i].sources.transform.position;
+            sources[i].min = sourceObjects[i].min;
+            sources[i].max = sourceObjects[i].max;
+
         }
-        SetSources(sourcePositionArray, sources.Length);
+
+        SetSources(sources, sourceObjects.Length);
         // ChangeVolumeByDistance(chID);
         //float panVal = ChangePanByOrientation(chID);
         SpatializeSourcesAndAudio();

@@ -54,8 +54,7 @@ void Implementation::Update() {
 
  void  InitAudioEngine() {
 	sgpImplementation = new Implementation;
-	spatializerData.min_Sound_Distance = 5.0f;
-	spatializerData.max_Sound_Distance = 35.0f;
+	
 }
 
 void  UpdateAudioEngine() {
@@ -207,12 +206,12 @@ void ChangeVolumeByDistance(int nChannelId, AudioSource localSource)
 	float volume = 0;
 
 	distance = sqrt(pow(spatializerData.listener.position.x - localSource.position.x, 2) + pow(spatializerData.listener.position.y - localSource.position.y, 2) + pow(spatializerData.listener.position.z - localSource.position.z, 2));
-	if (distance <= spatializerData.min_Sound_Distance)
+	if (distance <= localSource.min_Sound_Distance)
 		volume = 1.2f;
-	else if (distance >= spatializerData.max_Sound_Distance)
+	else if (distance >= localSource.max_Sound_Distance)
 		volume = 0.0f;
 	else
-		volume = 1  - ((distance - spatializerData.min_Sound_Distance) / (spatializerData.max_Sound_Distance - spatializerData.min_Sound_Distance));
+		volume = 1  - ((distance - localSource.min_Sound_Distance) / (localSource.max_Sound_Distance - localSource.min_Sound_Distance));
 	
 	SetChannelVolume(nChannelId, volume);
 	
@@ -242,11 +241,6 @@ void SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
 }
 
 
-
-void SetMinMaxDistance(float min, float max) {
-	spatializerData.min_Sound_Distance = min;
-	spatializerData.max_Sound_Distance = max;
-}
 
 
 float AngleValue(AudioSource localSource)
@@ -296,15 +290,14 @@ float AngleValue(AudioSource localSource)
 	return angleRadians;
 }
 
-int SetSources(Vector3* array, int size) //tribalo bi radit, ako slucajno pristupis i-tom elementu koji je veci od sizea, vratit ce neki nasumicni broj
+int SetSources(AudioSource* sourceArray, int size) //tribalo bi radit, ako slucajno pristupis i-tom elementu koji je veci od sizea, vratit ce neki nasumicni broj
 {
 	
 	spatializerData.numberOfSources = size;
 
 	for (int i = 0; i < size; i++)
 	{
-		
-		spatializerData.mSources[i].position = array[i];
+		spatializerData.mSources[i] = sourceArray[i];
 	}
 	
 	return 0;
@@ -316,7 +309,7 @@ string GetPathFromChannel(int channelId)
 
 	auto tFoundIt = sgpImplementation->mChannels.find(channelId);
 	if (tFoundIt == sgpImplementation->mChannels.end())
-		return 0;
+		return nullptr;
 
 	FMOD::Sound* ppSound = NULL;
 	ErrorCheck(tFoundIt->second->getCurrentSound(&ppSound));
@@ -337,11 +330,4 @@ int  SpatializeSourcesAndAudio()
 	return 0;
 }
 
-/*int SetTest(TestStruct* test, int size)
-{
-	for (int i = 0; i < size; i++)
-	{
 
-	}
-
-}*/

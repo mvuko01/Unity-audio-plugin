@@ -19,6 +19,8 @@ using namespace std;
 
 struct AudioSource {
 	Vector3 position;
+	float min_Sound_Distance = 5.0f;
+	float max_Sound_Distance = 50.0f;
 };
 
 struct AudioListener {
@@ -51,11 +53,12 @@ struct SpatializerData {
 	AudioListener listener;
 	AudioSource source;
 
+	
+
 	typedef map<int, AudioSource> AudioSourceMap;  // channel id tj. zvuk kanala povezujemo preko id kanala i AudioSourcea
 	AudioSourceMap mSources;
 
-	float min_Sound_Distance;
-	float max_Sound_Distance;
+	
 	
 	int numberOfSources = 0;
 };
@@ -94,9 +97,9 @@ extern "C" {
 	/*Moje funkcije*/
 	
 	DllExport void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
-	DllExport int SetSources(Vector3* array, int size);
+	DllExport int SetSources(AudioSource* sourceArray, int size);
 
-	DllExport void SetMinMaxDistance(float min, float max);
+	
 	DllExport void ChangeVolumeByDistance(int nChannelId, AudioSource localSource);
 	DllExport float ChangePanByOrientation(int nChannelId, AudioSource localSource);
 
@@ -106,7 +109,7 @@ extern "C" {
 	DllExport int  SpatializeSourcesAndAudio();
 
 	
-	/*DllExport int SetTest(TestStruct* test, int size);*/
+	
 	
 }
 
