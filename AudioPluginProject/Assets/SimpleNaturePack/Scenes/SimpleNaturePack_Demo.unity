@@ -4418,7 +4418,7 @@ MonoBehaviour:
   listener: {fileID: 1136385240}
   sourceObjects:
   - sources: {fileID: 739732978}
-    min: 5
+    min: -5
     max: 20
   - sources: {fileID: 1736731162}
     min: 5

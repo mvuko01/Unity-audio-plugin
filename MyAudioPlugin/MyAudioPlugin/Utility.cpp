@@ -57,3 +57,9 @@ Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2)
 	return rezult;
 }
 
+double VectorDistance(Vector3 vec1, Vector3 vec2)
+{
+
+	return sqrt(pow(vec1.x - vec2.x, 2) + pow(vec1.y - vec2.y, 2) + pow(vec1.z - vec1.z, 2));
+ 
+}

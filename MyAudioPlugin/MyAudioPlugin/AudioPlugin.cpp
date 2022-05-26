@@ -17,7 +17,6 @@ Implementation::Implementation() {
 	system = NULL;
 	ErrorCheck(System_Create(&system));
 	ErrorCheck(system->init(10, FMOD_INIT_NORMAL, 0));
-	
 	mnNextChannelId = 0;
 }
 
@@ -75,7 +74,7 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 	//ukoliko se je vec zvuk ucitan ne radi nista ova funkcija
 	auto tFoundIt = sgpImplementation->mSounds.find(strSoundPath);
 	if (tFoundIt != sgpImplementation->mSounds.end())
-		return -1;
+		return SOUND_ALREADY_LOADED;
 
 
 	//definiramo flagove zvuka
@@ -89,40 +88,29 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 	if (sound) {
 		
 		sgpImplementation->mSounds[strSoundPath] = sound;
-		return 1;
+		return OK;
 	}
 	
-	return -2;
+	return SOUNDLOAD_FAILED;
 	
 }
 
- int ReturnNumOfSounds() //funkcija za testiranjes
-{
-	
-	int n =	sgpImplementation->mSounds.size();
-	return n;
-}
-
- int ReturnNumOfChannels() //funkcija za testiranjes
- {
-
-	 int n = sgpImplementation->mChannels.size();
-	 return n;
- }
+ 
 
 
-void UnLoadSound(char* pstrSoundPath)
+int UnLoadSound(char* pstrSoundPath)
 {
 	string strSoundPath(pstrSoundPath);
 
 	auto tFoundIt = sgpImplementation->mSounds.find(strSoundPath);
 	if (tFoundIt == sgpImplementation->mSounds.end())
-		return;
+		return SOUND_NOT_FOUND;
+
 	ErrorCheck(tFoundIt->second->release());
 	sgpImplementation->mSounds.erase(tFoundIt);
+
+	return OK;
 }
-
-
 
 
 
@@ -140,7 +128,7 @@ int PlaySounds(char* pstrSoundPath)
 
 		if (tFoundIt == sgpImplementation->mSounds.end())
 		{
-			return -1;
+			return SOUND_NOT_FOUND;
 		}
 		
 	}
@@ -156,94 +144,112 @@ int PlaySounds(char* pstrSoundPath)
 		
 		return nChannelId;
 	}
-	return -2;
+	return PLAYSOUND_ERROR;
+}
+
+int ReturnNumOfSounds() //funkcija za testiranjes
+{
+
+	int n = sgpImplementation->mSounds.size();
+	return n;
+}
+
+int ReturnNumOfChannels() //funkcija za testiranjes
+{
+
+	int n = sgpImplementation->mChannels.size();
+	return n;
 }
 
 
-
-void SetChannelVolume(int nChannelId, float volume_value)
+RESULT SetChannelVolume(int nChannelId, float volume_value)
 {
 	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId); //ovo se moze stavit u funkciju pošto se ponavlja èesto
 	if (tFoundIt == sgpImplementation->mChannels.end())
-		return;
+		return CHANNEL_NOT_FOUND;
 
 
-	ErrorCheck(tFoundIt->second->setVolume(volume_value));
+	
+	return ErrorCheck(tFoundIt->second->setVolume(volume_value));
 }
 
-void SetChannelPan(int nChannelId, float panValue)
+RESULT SetChannelPan(int nChannelId, float panValue)
 {
 	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
 	if (tFoundIt == sgpImplementation->mChannels.end())
-		return;
+		return CHANNEL_NOT_FOUND;
 
 
-	ErrorCheck(tFoundIt->second->setPan(panValue));
-}
-
-FMOD_VECTOR VectorToFmod(const Vector3& vPosition) {
-	FMOD_VECTOR fVec;
-	fVec.x = vPosition.x;
-	fVec.y = vPosition.y;
-	fVec.z = vPosition.z;
-	return fVec;
-}
-
-int ErrorCheck(FMOD_RESULT result) {
-	if (result != FMOD_OK) {
-		cout << "FMOD ERROR " << result << endl;
-		return 1;
-	}
-	// cout << "FMOD all good" << endl;
-	return 0;
+	return ErrorCheck(tFoundIt->second->setPan(panValue));
 }
 
 
-
-void ChangeVolumeByDistance(int nChannelId, AudioSource localSource)
+int ChangeVolumeByDistance(int nChannelId, AudioSource currentSource)
 {
-	float distance = 0;
+	double distance = 0;
 	float volume = 0;
-
-	distance = sqrt(pow(spatializerData.listener.position.x - localSource.position.x, 2) + pow(spatializerData.listener.position.y - localSource.position.y, 2) + pow(spatializerData.listener.position.z - localSource.position.z, 2));
-	if (distance <= localSource.min_Sound_Distance)
+	
+	distance = VectorDistance(spatializerData.listener.position, currentSource.position);
+	if (distance <= currentSource.min_Sound_Distance)
 		volume = 1.2f;
-	else if (distance >= localSource.max_Sound_Distance)
+	else if (distance >= currentSource.max_Sound_Distance)
 		volume = 0.0f;
 	else
-		volume = 1  - ((distance - localSource.min_Sound_Distance) / (localSource.max_Sound_Distance - localSource.min_Sound_Distance));
+		volume = 1  - ((distance - currentSource.min_Sound_Distance) / (currentSource.max_Sound_Distance - currentSource.min_Sound_Distance));
 	
-	SetChannelVolume(nChannelId, volume);
+	 
+	return SetChannelVolume(nChannelId, volume);
 	
-	return;
 }
 
 
-float ChangePanByOrientation(int nChannelId, AudioSource localSource)
+int ChangePanByOrientation(int nChannelId, AudioSource currentSource)
 {
 
-	float angle = AngleValue(localSource);
-
+	float angle = AngleValue(currentSource);
 	float panValue = sin(angle);
 	
+	return SetChannelPan(nChannelId, panValue);
 
-	SetChannelPan(nChannelId, panValue);
-
-	return panValue;
 }
 
 
-void SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
+int SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
 	
 	spatializerData.listener.position= pos;
 	spatializerData.listener.forward = forward;
 	spatializerData.listener.up = up;
+
+	return OK;
+}
+
+int SetSources(AudioSource* sourceArray, int size) //tribalo bi radit, ako slucajno pristupis i-tom elementu koji je veci od sizea, vratit ce neki nasumicni broj
+{
+
+	spatializerData.numberOfSources = size;
+
+	for (int i = 0; i < size; i++)
+	{
+		spatializerData.mSources[i].position = sourceArray[i].position;
+
+		if (sourceArray[i].min_Sound_Distance > 0 && sourceArray[i].min_Sound_Distance < sourceArray[i].max_Sound_Distance)
+		{
+			spatializerData.mSources[i].min_Sound_Distance = sourceArray[i].min_Sound_Distance;
+
+		}
+		if (sourceArray[i].max_Sound_Distance > 0 && sourceArray[i].min_Sound_Distance < sourceArray[i].max_Sound_Distance)
+		{
+			spatializerData.mSources[i].max_Sound_Distance = sourceArray[i].max_Sound_Distance;
+
+		}
+
+	}
+
+	return OK;
 }
 
 
-
-
-float AngleValue(AudioSource localSource)
+float AngleValue(AudioSource currentSource)
 {
 	Vector3 tempForward;
 	tempForward.x = spatializerData.listener.forward.x;
@@ -253,72 +259,18 @@ float AngleValue(AudioSource localSource)
 
 	Vector3 side = VectorCrossProduct(spatializerData.listener.up, spatializerData.listener.forward);
 	side = VectorNormalize(side);
-	//side.y = 0;
-	Vector3 difference = VectorSubtract(localSource.position, spatializerData.listener.position);
-	//difference.y = 0;
-
-
+	
+	Vector3 difference = VectorSubtract(currentSource.position, spatializerData.listener.position);
+	
 
 	float x = VectorDotProduct(difference, side);
 	float z = VectorDotProduct(difference, spatializerData.listener.forward);
 	float angleRadians = atan2(x, z);
 	float angleDegrees = angleRadians * (180.0 / 3.14);
 
-	/*Vector3 difference = VectorSubtract(source.position, listener.position);
-	cout << "Difference: " << difference.x << " " << difference.y << " " << difference.z << endl;
-
-
-	float dotProduct = VectorDotProduct(difference, listener.forward);
-	cout << "Dot product = " << dotProduct << endl;
-	float magnitudeOfDiff = VectorMagnitude(difference);
-	cout << "Diff magnitude = " << magnitudeOfDiff << endl;
-
-	float magnitudeOfForward = VectorMagnitude(listener.forward);
-	cout << "Forward magnitude = " << magnitudeOfForward << endl;
-
-	float acosArgument = dotProduct / (magnitudeOfDiff * magnitudeOfForward);
-	cout << "Acos argument = " << acosArgument << endl;
-
-	float angleRadians = acos(acosArgument);
-	float angleDegrees = angleRadians * (180.0 / 3.14);*/
-
-	/*Vector3 difference = VectorSubtract(source.position, listener.position);
-
-	float angleRadians = atan2(difference.z * listener.forward.x - difference.x * listener.forward.z, difference.x * listener.forward.x + difference.z * listener.forward.z);
-	float angleDegrees = angleRadians * (180.0 / 3.14);*/
-
 	return angleRadians;
 }
 
-int SetSources(AudioSource* sourceArray, int size) //tribalo bi radit, ako slucajno pristupis i-tom elementu koji je veci od sizea, vratit ce neki nasumicni broj
-{
-	
-	spatializerData.numberOfSources = size;
-
-	for (int i = 0; i < size; i++)
-	{
-		spatializerData.mSources[i] = sourceArray[i];
-	}
-	
-	return 0;
-}
-
-string GetPathFromChannel(int channelId)
-{
-	char soundName[256];
-
-	auto tFoundIt = sgpImplementation->mChannels.find(channelId);
-	if (tFoundIt == sgpImplementation->mChannels.end())
-		return nullptr;
-
-	FMOD::Sound* ppSound = NULL;
-	ErrorCheck(tFoundIt->second->getCurrentSound(&ppSound));
-	ErrorCheck(ppSound->getName(soundName, 256));
-	
-	string soundString(soundName);
-	
-	return soundString;
-}
 
 int  SpatializeSourcesAndAudio()
 {
@@ -327,7 +279,17 @@ int  SpatializeSourcesAndAudio()
 		ChangeVolumeByDistance(it->first, it->second);
 		ChangePanByOrientation(it->first, it->second);
 	}
-	return 0;
+	return OK;
 }
 
 
+RESULT ErrorCheck(FMOD_RESULT result) {
+
+	if (result != FMOD_OK) {
+
+		cout << "FMOD ERROR " << result << endl;
+		return FMOD_ERROR;
+
+	}
+	return OK;
+}

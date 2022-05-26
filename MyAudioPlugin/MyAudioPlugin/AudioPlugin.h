@@ -15,7 +15,16 @@
 
 using namespace std;
 
+enum RESULT {
+	OK,
+	FMOD_ERROR,
+	SOUND_ALREADY_LOADED,
+	SOUNDLOAD_FAILED,
+	SOUND_NOT_FOUND,
+	PLAYSOUND_ERROR,
+	CHANNEL_NOT_FOUND
 
+};
 
 struct AudioSource {
 	Vector3 position;
@@ -66,51 +75,38 @@ struct SpatializerData {
 
 extern "C" {
 
-	DllExport void  InitAudioEngine(); //izbrisan static
+	DllExport void  InitAudioEngine(); 
 	DllExport void  UpdateAudioEngine();
-	DllExport  void ShutdownAudioEngine();
-	static int ErrorCheck(FMOD_RESULT result);
-
-
+	DllExport void  ShutdownAudioEngine();
+	
 
 	DllExport int LoadSound(char* strSoundPath, bool bLooping);
-	DllExport void UnLoadSound(char* strSoundPath);
-	
+	DllExport int UnLoadSound(char* strSoundPath);
 	DllExport int PlaySounds(char* strSoundPath);
 
 	//void StopChannel(int nChannelId);
 	//void StopAllChannels();
 	//bool IsPlaying(int nChannelId) const;
-
-	DllExport int ReturnNumOfSounds(); //ove su sluzile za testiranje, ne treba dllexport
-	DllExport int ReturnNumOfChannels(); //
+	int ReturnNumOfSounds(); //ove su sluzile za testiranje, ne treba dllexport
+	int ReturnNumOfChannels(); //
+	
 
 	
-	void SetChannelVolume(int nChannelId, float fVolumedB);
-	void SetChannelPan(int nChannelId, float panValue);
+	RESULT SetChannelVolume(int nChannelId, float fVolumedB);
+	RESULT SetChannelPan(int nChannelId, float panValue);
 	float AngleValue(AudioSource localSource);
 	
-	
-	FMOD_VECTOR VectorToFmod(const Vector3& vPosition); //mislim da ovu funkciju niti ne korismi nigdi
 
 	
-	/*Moje funkcije*/
-	
-	DllExport void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
+	DllExport int SetListener(Vector3 pos, Vector3 forward, Vector3 up);
+
+	DllExport int ChangeVolumeByDistance(int nChannelId, AudioSource localSource);
+	DllExport int ChangePanByOrientation(int nChannelId, AudioSource localSource);
 	DllExport int SetSources(AudioSource* sourceArray, int size);
-
-	
-	DllExport void ChangeVolumeByDistance(int nChannelId, AudioSource localSource);
-	DllExport float ChangePanByOrientation(int nChannelId, AudioSource localSource);
-
-	
-	
-	DllExport string GetPathFromChannel(int channelId); // mozda ne treba uopce
 	DllExport int  SpatializeSourcesAndAudio();
 
 	
-	
-	
+	static RESULT ErrorCheck(FMOD_RESULT result);
 }
 
 
