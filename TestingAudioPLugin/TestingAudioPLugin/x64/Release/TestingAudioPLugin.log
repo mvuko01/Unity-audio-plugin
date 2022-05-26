@@ -1,6 +1,6 @@
 ﻿  Generating code
-  15 of 86 functions (17.4%) were compiled, the rest were copied from previous compilation.
-    2 functions were new in current compilation
+  45 of 52 functions (86.5%) were compiled, the rest were copied from previous compilation.
+    44 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   TestingAudioPLugin.vcxproj -> C:\Users\Matej\Desktop\Završni rad\Kod\TestingAudioPLugin\x64\Release\TestingAudioPLugin.exe

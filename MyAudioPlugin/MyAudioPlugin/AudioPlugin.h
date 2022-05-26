@@ -17,6 +17,16 @@ using namespace std;
 
 
 
+struct AudioSource {
+	Vector3 position;
+};
+
+struct AudioListener {
+	Vector3 position;
+	Vector3 forward;
+	Vector3 up;
+};
+
 class Implementation {
 public:
 	Implementation();
@@ -27,30 +37,27 @@ public:
 
 	int mnNextChannelId;
 
-	typedef map<string, FMOD::Sound*> SoundMap;
-	typedef map<int, FMOD::Channel*> ChannelMap;
+	typedef map<string, FMOD::Sound*> SoundMap; //svaki sound map je definiran sa strinom i pokazivacem
+	typedef map<int, FMOD::Channel*> ChannelMap; //svaki kanal ima svoj int tj. channel id
+	
+	
 	SoundMap mSounds;
 	ChannelMap mChannels;
 
 };
 
-struct AudioListener {
-	Vector3 position;
-	Vector3 forward;
-	Vector3 up;
-};
-
-struct AudioSource {
-	Vector3 position;
-};
 
 struct SpatializerData {
 	AudioListener listener;
 	AudioSource source;
+
+	typedef map<int, AudioSource> AudioSourceMap;  // channel id tj. zvuk kanala povezujemo preko id kanala i AudioSourcea
+	AudioSourceMap mSources;
+
 	float min_Sound_Distance;
 	float max_Sound_Distance;
-	AudioSource* pSourceArray;
-	int numberOfSources;
+	
+	int numberOfSources = 0;
 };
 
 
@@ -78,7 +85,7 @@ extern "C" {
 	
 	void SetChannelVolume(int nChannelId, float fVolumedB);
 	void SetChannelPan(int nChannelId, float panValue);
-	float AngleValue();
+	float AngleValue(AudioSource localSource);
 	
 	
 	FMOD_VECTOR VectorToFmod(const Vector3& vPosition); //mislim da ovu funkciju niti ne korismi nigdi
@@ -87,14 +94,19 @@ extern "C" {
 	/*Moje funkcije*/
 	
 	DllExport void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
-	DllExport void SetSource(Vector3 pos);
-	DllExport void SetMinMaxDistance(float min, float max);
-	DllExport void ChangeVolumeByDistance(int nChannelId);
-	DllExport float ChangePanByOrientation(int nChannelId);
-
 	DllExport int SetSources(Vector3* array, int size);
-	
 
+	DllExport void SetMinMaxDistance(float min, float max);
+	DllExport void ChangeVolumeByDistance(int nChannelId, AudioSource localSource);
+	DllExport float ChangePanByOrientation(int nChannelId, AudioSource localSource);
+
+	
+	
+	DllExport string GetPathFromChannel(int channelId); // mozda ne treba uopce
+	DllExport int  SpatializeSourcesAndAudio();
+
+	
+	/*DllExport int SetTest(TestStruct* test, int size);*/
 	
 }
 

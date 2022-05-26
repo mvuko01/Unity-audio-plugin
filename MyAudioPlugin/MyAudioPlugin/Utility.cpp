@@ -56,3 +56,4 @@ Vector3 VectorSubtract(Vector3 vec1, Vector3 vec2)
 
 	return rezult;
 }
+

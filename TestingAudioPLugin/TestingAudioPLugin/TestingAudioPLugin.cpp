@@ -3,39 +3,19 @@
 #include "MyAudioPlugin/AudioPlugin.h"
 #include <iostream>
 #include <string>
-#include "TestingAudioPLugin.h"
 
 
-class Dog {
-public:
-	string name = "Keith";
 
 
-};
-
-struct Dawg {
-	string name;
-	int a;
-
-};
 
 using namespace std;
 
 int main()
 {
-	Dog* dog = nullptr;
-
-	
-	Dawg varijabla;
-
-	varijabla.a
-
-
-	cout << dawg.name;
 	
 	
 	
-	AudioSource source;
+	/*AudioSource source;
 	AudioListener listener;
 
 	source.position = { 30.0f, 0.0f, 0.0f };
@@ -50,12 +30,15 @@ int main()
 
 	float panValue = sin(angle);
 	float side = cos(angle);
-
 	
-
-
 	cout << endl << "Angle is "<< angle;
 	cout << endl << "Pan is " << panValue;
+	
+	*/
+
+	string str;
+
+	
 
 	InitAudioEngine();
 	//
@@ -63,7 +46,10 @@ int main()
 	////LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", false);
 	int id = PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav");
 
-	SetChannelPan(id, -1);
+	str = GetPathFromChannel(id);
+
+	cout << str;
+	//SetChannelPan(id, -1);
 	////PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", 50);
 	//
 	while (1) {

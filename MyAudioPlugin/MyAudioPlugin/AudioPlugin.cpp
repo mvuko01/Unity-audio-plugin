@@ -23,6 +23,7 @@ Implementation::Implementation() {
 
 Implementation::~Implementation() {
 	ErrorCheck(system->release());
+	
 }
 
 void Implementation::Update() {
@@ -63,6 +64,7 @@ void  UpdateAudioEngine() {
 
 void ShutdownAudioEngine() {
 	delete sgpImplementation;
+	
 }
 
 
@@ -90,9 +92,9 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 		sgpImplementation->mSounds[strSoundPath] = sound;
 		return 1;
 	}
-	//auto it = sgpImplementation->mSounds.find(strSoundPath);
+	
 	return -2;
-	//cout << it->first;
+	
 }
 
  int ReturnNumOfSounds() //funkcija za testiranjes
@@ -143,14 +145,15 @@ int PlaySounds(char* pstrSoundPath)
 		}
 		
 	}
-	//cout << "Found path in map: "<< tFoundIt->first;
+
+	
 	FMOD::Channel* pChannel = nullptr;
 	ErrorCheck(sgpImplementation->system->playSound(tFoundIt->second, nullptr, true, &pChannel));
 	if (pChannel)
-	{	
-		
+	{		
 		ErrorCheck(pChannel->setPaused(false));
 		sgpImplementation->mChannels[nChannelId] = pChannel;
+
 		
 		return nChannelId;
 	}
@@ -198,12 +201,12 @@ int ErrorCheck(FMOD_RESULT result) {
 
 
 
-void ChangeVolumeByDistance(int nChannelId)
+void ChangeVolumeByDistance(int nChannelId, AudioSource localSource)
 {
 	float distance = 0;
 	float volume = 0;
 
-	distance = sqrt(pow(spatializerData.listener.position.x - spatializerData.source.position.x, 2) + pow(spatializerData.listener.position.y - spatializerData.source.position.y, 2) + pow(spatializerData.listener.position.z - spatializerData.source.position.z, 2));
+	distance = sqrt(pow(spatializerData.listener.position.x - localSource.position.x, 2) + pow(spatializerData.listener.position.y - localSource.position.y, 2) + pow(spatializerData.listener.position.z - localSource.position.z, 2));
 	if (distance <= spatializerData.min_Sound_Distance)
 		volume = 1.2f;
 	else if (distance >= spatializerData.max_Sound_Distance)
@@ -217,16 +220,13 @@ void ChangeVolumeByDistance(int nChannelId)
 }
 
 
-float ChangePanByOrientation(int nChannelId)
+float ChangePanByOrientation(int nChannelId, AudioSource localSource)
 {
-	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId);
-	if (tFoundIt == sgpImplementation->mChannels.end())
-		return 0;
 
-	float angle = AngleValue();
+	float angle = AngleValue(localSource);
 
 	float panValue = sin(angle);
-	//float side = cos(angle);
+	
 
 	SetChannelPan(nChannelId, panValue);
 
@@ -241,9 +241,7 @@ void SetListener(Vector3 pos, Vector3 forward, Vector3 up) {
 	spatializerData.listener.up = up;
 }
 
-void SetSource(Vector3 pos) {
-	spatializerData.source.position = pos;
-}
+
 
 void SetMinMaxDistance(float min, float max) {
 	spatializerData.min_Sound_Distance = min;
@@ -251,7 +249,7 @@ void SetMinMaxDistance(float min, float max) {
 }
 
 
-float AngleValue()
+float AngleValue(AudioSource localSource)
 {
 	Vector3 tempForward;
 	tempForward.x = spatializerData.listener.forward.x;
@@ -262,7 +260,7 @@ float AngleValue()
 	Vector3 side = VectorCrossProduct(spatializerData.listener.up, spatializerData.listener.forward);
 	side = VectorNormalize(side);
 	//side.y = 0;
-	Vector3 difference = VectorSubtract(spatializerData.source.position, spatializerData.listener.position);
+	Vector3 difference = VectorSubtract(localSource.position, spatializerData.listener.position);
 	//difference.y = 0;
 
 
@@ -300,16 +298,50 @@ float AngleValue()
 
 int SetSources(Vector3* array, int size) //tribalo bi radit, ako slucajno pristupis i-tom elementu koji je veci od sizea, vratit ce neki nasumicni broj
 {
-	spatializerData.pSourceArray = new AudioSource[size];
+	
 	spatializerData.numberOfSources = size;
 
 	for (int i = 0; i < size; i++)
 	{
-		spatializerData.pSourceArray[i].position = array[i];
-	
+		
+		spatializerData.mSources[i].position = array[i];
 	}
 	
 	return 0;
 }
 
+string GetPathFromChannel(int channelId)
+{
+	char soundName[256];
 
+	auto tFoundIt = sgpImplementation->mChannels.find(channelId);
+	if (tFoundIt == sgpImplementation->mChannels.end())
+		return 0;
+
+	FMOD::Sound* ppSound = NULL;
+	ErrorCheck(tFoundIt->second->getCurrentSound(&ppSound));
+	ErrorCheck(ppSound->getName(soundName, 256));
+	
+	string soundString(soundName);
+	
+	return soundString;
+}
+
+int  SpatializeSourcesAndAudio()
+{
+	for (auto it = spatializerData.mSources.begin(), itEnd = spatializerData.mSources.end(); it != itEnd; ++it)
+	{
+		ChangeVolumeByDistance(it->first, it->second);
+		ChangePanByOrientation(it->first, it->second);
+	}
+	return 0;
+}
+
+/*int SetTest(TestStruct* test, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+
+	}
+
+}*/
