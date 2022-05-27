@@ -16,6 +16,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
+    - UnityEngine.UI.Text
   sceneClasses:
     Assets/SimpleNaturePack/Scenes/SimpleNaturePack_Demo.unity:
     - Class: 1
@@ -38,8 +39,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 64
       Script: {instanceID: 0}
-    - Class: 65
-      Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
     - Class: 89
@@ -50,6 +49,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 114
       Script: {instanceID: 1480}
+    - Class: 114
+      Script: {instanceID: 1950}
     - Class: 114
       Script: {instanceID: 2226}
     - Class: 114
@@ -65,6 +66,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3744}
     - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
       Script: {instanceID: 0}
     - Class: 143
       Script: {instanceID: 0}
@@ -483,7 +486,7 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
-      Hash: 440fd613d764c81b0cda96efff4c5150
+      Hash: 0760fac8c58ae7969e4f3d42a15e9842
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyTestScript

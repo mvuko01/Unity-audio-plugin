@@ -47,7 +47,7 @@ public class MyTestScript : MonoBehaviour
     public static extern int ReturnNumOfChannels();
 
     [DllImport("MyAudioPlugin")]
-    public static extern void SetListener(Vector3 pos, Vector3 forward, Vector3 up);
+    public static extern int SetListener(Vector3 pos, Vector3 forward, Vector3 up);
 
     [DllImport("MyAudioPlugin")]
     public static extern int SetSources(AudioSourceStruct[] array, int size);
@@ -78,7 +78,7 @@ public class MyTestScript : MonoBehaviour
 
         InitAudioEngine();
 
-        
+        //
         
 
 
@@ -91,12 +91,13 @@ public class MyTestScript : MonoBehaviour
             
             path = Path.Combine(Application.streamingAssetsPath, file.Name);
            
-            LoadSound(path, true);
+
+            Debug.Log(LoadSound(path, true));
             PlaySounds(path);
         }
 
-        
-       
+    
+
         //string firstPath = Path.Combine(Application.streamingAssetsPath, "singing.wav");
         // Debug.Log(" path " + firstPath);
 
@@ -112,15 +113,15 @@ public class MyTestScript : MonoBehaviour
         //rez = PlaySounds(secondPath, 0.0f);
         //Debug.Log("Rezult of PlaySound second: " + rez);
         //PlaySounds(secondPath, 0.0f);
-       
 
 
 
 
 
-        
 
-       
+
+
+
         //Debug.Log("Angle value: " + AngleValue());
 
 

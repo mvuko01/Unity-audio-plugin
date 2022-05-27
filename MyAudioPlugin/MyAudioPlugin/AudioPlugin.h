@@ -87,8 +87,8 @@ extern "C" {
 	//void StopChannel(int nChannelId);
 	//void StopAllChannels();
 	//bool IsPlaying(int nChannelId) const;
-	int ReturnNumOfSounds(); //ove su sluzile za testiranje, ne treba dllexport
-	int ReturnNumOfChannels(); //
+	DllExport int ReturnNumOfSounds(); //ove su sluzile za testiranje, ne treba dllexport
+	DllExport int ReturnNumOfChannels(); //
 	
 
 	

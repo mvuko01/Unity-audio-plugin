@@ -81,6 +81,7 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 	FMOD_MODE eMode = FMOD_DEFAULT;
 	eMode |= bLooping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
 	eMode |= FMOD_2D;
+	
 
 	FMOD::Sound* sound = NULL;
 	ErrorCheck(sgpImplementation->system->createSound(pstrSoundPath, eMode, 0, &sound)); 
