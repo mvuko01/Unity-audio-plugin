@@ -47,21 +47,21 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1490}
+      Script: {instanceID: 1482}
     - Class: 114
-      Script: {instanceID: 2240}
+      Script: {instanceID: 2230}
     - Class: 114
-      Script: {instanceID: 2340}
+      Script: {instanceID: 2330}
     - Class: 114
-      Script: {instanceID: 2486}
+      Script: {instanceID: 2476}
     - Class: 114
-      Script: {instanceID: 2658}
+      Script: {instanceID: 2648}
     - Class: 114
-      Script: {instanceID: 2666}
+      Script: {instanceID: 2656}
     - Class: 114
-      Script: {instanceID: 3392}
+      Script: {instanceID: 3382}
     - Class: 114
-      Script: {instanceID: 3764}
+      Script: {instanceID: 3750}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 143
@@ -530,4 +530,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/SimpleNaturePack/Scenes/SimpleNaturePack_Demo.unity
-  playerPath: C:/Users/Matej/Desktop/ZavrsniRad/Builds/Android Builds/FirstBuild.apk
+  playerPath: C:/Users/Matej/Desktop/ZavrsniRad/Builds/Android Builds/SeventhBuild.apk

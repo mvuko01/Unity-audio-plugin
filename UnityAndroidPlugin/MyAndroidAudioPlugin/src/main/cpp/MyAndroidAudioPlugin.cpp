@@ -37,7 +37,7 @@ SpatializerData spatializerData;
 Implementation::Implementation() {
     system = nullptr;
     ErrorCheck(System_Create(&system));
-    ErrorCheck(system->init(10, FMOD_INIT_NORMAL, nullptr));
+    ErrorCheck(system->init(10, FMOD_INIT_NORMAL, 0));
     mnNextChannelId = 0;
 }
 

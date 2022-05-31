@@ -42,11 +42,11 @@ int main()
 
 	InitAudioEngine();
 	//
-	LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav", true);
+	LoadSound((char*)"https://www.youtube.com/watch?v=PkkkKxHJtoo&list=RDPkkkKxHJtoo&start_radio=1&ab_channel=TrapNation", true);
 	////LoadSound((char*)"C:\\Users\\Matej\\Desktop\\test\\jaguar.wav", false);
-	int id = PlaySounds((char*)"C:\\Users\\Matej\\Desktop\\test\\singing.wav");
+	int id = PlaySounds((char*)"https://www.youtube.com/watch?v=PkkkKxHJtoo&list=RDPkkkKxHJtoo&start_radio=1&ab_channel=TrapNation");
 
-	str = GetPathFromChannel(id);
+	
 
 	cout << str;
 	//SetChannelPan(id, -1);
