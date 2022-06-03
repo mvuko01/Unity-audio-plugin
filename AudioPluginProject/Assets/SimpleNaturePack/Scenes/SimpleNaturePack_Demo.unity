@@ -4476,7 +4476,7 @@ MonoBehaviour:
   sourceObjects:
   - sources: {fileID: 707003882}
     min: 3
-    max: 50
+    max: 35
   - sources: {fileID: 1198814688}
     min: 3
     max: 25

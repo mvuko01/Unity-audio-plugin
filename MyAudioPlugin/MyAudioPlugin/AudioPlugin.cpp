@@ -7,7 +7,7 @@
 using namespace std;
 using namespace FMOD;
 
-
+//all functions share the same implementation object and spatializer data
 Implementation* sgpImplementation = nullptr;
 SpatializerData spatializerData;
 
@@ -18,30 +18,29 @@ Implementation::Implementation() {
 	ErrorCheck(System_Create(&system));
 	ErrorCheck(system->init(10, FMOD_INIT_NORMAL, 0));
 	mnNextChannelId = 0;
-}
+} //Implementation constructor creates and starts the FMOD system
 
 Implementation::~Implementation() {
 	ErrorCheck(system->release());
 	
-}
+} //Destructor releases the FMOD system 
 
-void Implementation::Update() {
+void Implementation::Update() { //Updates the FMOD system
 
-	//prva for petlja prolazi kroz mapu mChannels i provjerava dali su prestali sa zvukom 
-	//ako su prestali stavlja ih u vektor pStoppedChannels
-	vector<ChannelMap::iterator> pStoppedChannels;
+	//If a channel has stopped playing it is placed in a vector StoppedChannels and after deleted from ChannelMap
+	vector<ChannelMap::iterator> vStoppedChannels;
 	for (auto it = mChannels.begin(), itEnd = mChannels.end(); it != itEnd; ++it)
 	{
 		bool bIsPlaying = false;
 		it->second->isPlaying(&bIsPlaying);
 		if (!bIsPlaying)
 		{
-			pStoppedChannels.push_back(it);
+			vStoppedChannels.push_back(it);
 		}
 	}
 	
 
-	for (auto& it : pStoppedChannels)
+	for (auto& it : vStoppedChannels)
 	{
 		
 		mChannels.erase(it);
@@ -51,7 +50,7 @@ void Implementation::Update() {
 }
 
 
- void  InitAudioEngine() {
+ void  InitAudioEngine() { 
 	sgpImplementation = new Implementation;
 	
 }
@@ -71,13 +70,13 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 {
 	string strSoundPath(pstrSoundPath);
 
-	//ukoliko se je vec zvuk ucitan ne radi nista ova funkcija
+	//if sound is already loaded then return flag
 	auto tFoundIt = sgpImplementation->mSounds.find(strSoundPath);
 	if (tFoundIt != sgpImplementation->mSounds.end())
 		return SOUND_ALREADY_LOADED;
 
 
-	//definiramo flagove zvuka
+	//Used for defining flags of the sound
 	FMOD_MODE eMode = FMOD_DEFAULT;
 	eMode |= bLooping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
 	eMode |= FMOD_2D;
@@ -87,7 +86,7 @@ int LoadSound(char* pstrSoundPath, bool bLooping)
 	ErrorCheck(sgpImplementation->system->createSound(pstrSoundPath, eMode, 0, &sound)); 
 
 	if (sound) {
-		
+		//if sound returns true, sound is places inside sound map
 		sgpImplementation->mSounds[strSoundPath] = sound;
 		return OK;
 	}
@@ -119,6 +118,7 @@ int PlaySounds(char* pstrSoundPath)
 {
 	string strSoundPath(pstrSoundPath);
 
+	//check if sound is in SoundMap and if its not found then it puts it in the Soundmap
 	int nChannelId = sgpImplementation->mnNextChannelId++;
 	auto tFoundIt = sgpImplementation->mSounds.find(strSoundPath);
 	if (tFoundIt == sgpImplementation->mSounds.end())
@@ -134,7 +134,7 @@ int PlaySounds(char* pstrSoundPath)
 		
 	}
 
-	
+	//if channel is succesfully created then it puts the channel in ChannelMap
 	FMOD::Channel* pChannel = nullptr;
 	ErrorCheck(sgpImplementation->system->playSound(tFoundIt->second, nullptr, true, &pChannel));
 	if (pChannel)
@@ -163,9 +163,9 @@ int ReturnNumOfChannels() //funkcija za testiranjes
 }
 
 
-RESULT SetChannelVolume(int nChannelId, float volume_value)
+RESULT SetChannelVolume(int nChannelId, float volume_value) 
 {
-	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId); //ovo se moze stavit u funkciju pošto se ponavlja èesto
+	auto tFoundIt = sgpImplementation->mChannels.find(nChannelId); 
 	if (tFoundIt == sgpImplementation->mChannels.end())
 		return CHANNEL_NOT_FOUND;
 
@@ -190,6 +190,7 @@ int ChangeVolumeByDistance(int nChannelId, AudioSource currentSource)
 	double distance = 0;
 	float volume = 0;
 	
+	//linear adjustment of volume based on the distance from audiosource
 	distance = VectorDistance(spatializerData.listener.position, currentSource.position);
 	if (distance <= currentSource.min_Sound_Distance)
 		volume = 1.2f;
@@ -206,7 +207,7 @@ int ChangeVolumeByDistance(int nChannelId, AudioSource currentSource)
 
 int ChangePanByOrientation(int nChannelId, AudioSource currentSource)
 {
-
+	//adjustment of Pan depenging of orientation
 	float angle = AngleValue(currentSource);
 	float panValue = sin(angle);
 	
@@ -229,10 +230,14 @@ int SetSources(AudioSource* sourceArray, int size) //tribalo bi radit, ako sluca
 
 	spatializerData.numberOfSources = size;
 
+	
 	for (int i = 0; i < size; i++)
 	{
 		spatializerData.mSources[i].position = sourceArray[i].position;
 
+
+		//checks if the minimum and maximum distance of the sound are entered correctly (max > min, and that they are >0)
+		//if the conditions are not met, default values from the struct are applied
 		if (sourceArray[i].min_Sound_Distance > 0 && sourceArray[i].min_Sound_Distance < sourceArray[i].max_Sound_Distance)
 		{
 			spatializerData.mSources[i].min_Sound_Distance = sourceArray[i].min_Sound_Distance;
@@ -252,10 +257,7 @@ int SetSources(AudioSource* sourceArray, int size) //tribalo bi radit, ako sluca
 
 float AngleValue(AudioSource currentSource)
 {
-	Vector3 tempForward;
-	tempForward.x = spatializerData.listener.forward.x;
-	tempForward.z = spatializerData.listener.forward.z;
-	tempForward.y = 0;
+	//calculating the angle from audioListener to current audio source
 
 
 	Vector3 side = VectorCrossProduct(spatializerData.listener.up, spatializerData.listener.forward);
@@ -267,13 +269,13 @@ float AngleValue(AudioSource currentSource)
 	float x = VectorDotProduct(difference, side);
 	float z = VectorDotProduct(difference, spatializerData.listener.forward);
 	float angleRadians = atan2(x, z);
-	float angleDegrees = angleRadians * (180.0 / 3.14);
+	
 
 	return angleRadians;
 }
 
 
-int  SpatializeSourcesAndAudio()
+int  SpatializeSourcesAndAudio() //used for grouping and changing the Pan and Volume of all sources
 {
 	for (auto it = spatializerData.mSources.begin(), itEnd = spatializerData.mSources.end(); it != itEnd; ++it)
 	{

@@ -28,7 +28,7 @@ Vector3 VectorCrossProduct(Vector3 vec1, Vector3 vec2)
 
 float VectorMagnitude(Vector3 vec1)
 {
-	return sqrtf(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z); //vec1.y * vec1.y +
+	return sqrtf(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z); 
 
 }
 

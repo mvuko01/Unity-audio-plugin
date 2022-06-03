@@ -2,6 +2,10 @@
 
 #include<math.h>
 
+//Utility includes all operations that are done with 3D vectors
+//Also includes the Vector3 struct
+
+
 struct Vector3 {
 	float x;
 	float y;
