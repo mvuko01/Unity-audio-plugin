@@ -4476,10 +4476,10 @@ MonoBehaviour:
   sourceObjects:
   - sources: {fileID: 707003882}
     min: 3
-    max: 50
+    max: 100
   - sources: {fileID: 1198814688}
     min: 3
-    max: 25
+    max: 100
 --- !u!114 &1136385245
 MonoBehaviour:
   m_ObjectHideFlags: 0

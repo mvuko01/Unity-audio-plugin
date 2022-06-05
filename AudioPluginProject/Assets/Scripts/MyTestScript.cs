@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using UnityEditor;
 using UnityEngine;
- 
+
 [System.Serializable]
 public class AudioSourceObjects 
 {
@@ -29,64 +29,81 @@ public class MyTestScript : MonoBehaviour
     
     public GameObject listener;
     public AudioSourceObjects[] sourceObjects;
-   
 
 
+    private void Awake()
+    {
+           
+    }
 
     void Start()
     {
 
-     // PluginWrapper.UInitAudioEngine();
+        PluginWrapper.UInitAudioEngine();
 
 
 
 
 
-        /*DirectoryInfo dir = new DirectoryInfo(Application.streamingAssetsPath);
-         FileInfo[] allFile = dir.GetFiles("*.wav"); //nece ucitat mp3 datoteke
-         string path;
-
-         foreach (FileInfo file in allFile)
-         {
-            Debug.Log(file.Name);
-             path = Path.Combine(Application.streamingAssetsPath, file.Name);
-            Debug.Log(path);
-
-             
-         }*/
+      
 
 
         string name1 = "aaa.wav";
         string name2 = "bbb.wav";
 
-        string asssetpath = "jar:file://" + Application.dataPath + "!assets/";
 
         string _path1 = System.IO.Path.Combine(Application.streamingAssetsPath, name1);
         string _path2 = Path.Combine(Application.streamingAssetsPath, name2);
-        Debug.Log(_path1);
-       
+       Debug.Log("Path 1" + _path1);
+
         UnityEngine.Networking.UnityWebRequest www1 = UnityEngine.Networking.UnityWebRequest.Get(_path1);
         UnityEngine.Networking.UnityWebRequest www2 = UnityEngine.Networking.UnityWebRequest.Get(_path2);
 
-       www1.SendWebRequest();
+        www1.SendWebRequest();
         while (!www1.isDone)
         {
         }
-        var filepath = string.Format(Application.persistentDataPath, name1);
-        Debug.Log(filepath);
-        File.WriteAllBytes(filepath, www1.downloadHandler.data);
-        www2.SendWebRequest();
+       www2.SendWebRequest();
         while (!www2.isDone)
         {
-        }
-        
-        /*string path2String = www2.downloadHandler.text;
-        Debug.Log(path1String);*/
+       }
 
-      //  PluginWrapper.ULoadSound(filepath, true);
-       // PluginWrapper.ULoadSound(_path2, true);
-       // PluginWrapper.UPlaySounds(filepath);
-       // PluginWrapper.UPlaySounds(_path2);
+        string filepath1 = Path.Combine(Application.persistentDataPath, name1);
+        Debug.Log("Filepath " + filepath1);
+        File.WriteAllBytes(filepath1, www1.downloadHandler.data);
+
+        string filepath2 = Path.Combine(Application.persistentDataPath, name2);
+        File.WriteAllBytes(filepath2, www2.downloadHandler.data);
+
+
+
+
+
+        // _path2 = "file:///" + _path2;
+        // filepath = "file:///" + filepath;
+
+
+
+
+        // Debug.Log(path1String);*/
+        //Debug.Log("Second path: " + _path1);
+        // Debug.Log("Filepath path: " + filepath);
+
+        int rez = PluginWrapper.ULoadSound(filepath1, true);
+        Debug.Log("Result of load sound: " + rez);
+        rez = PluginWrapper.UPlaySounds(filepath1);
+        Debug.Log("Result of play sound: " + rez);
+
+        rez = PluginWrapper.ULoadSound(filepath2, true);
+        Debug.Log("Result of load sound: " + rez);
+        rez = PluginWrapper.UPlaySounds(filepath2);
+        Debug.Log("Result of play sound: " + rez);
+
+
+        //PluginWrapper.ULoadSound(_path1, true);
+        //PluginWrapper.ULoadSound(_path2, true);
+        // PluginWrapper.UPlaySounds(_path1);
+        // PluginWrapper.UPlaySounds(_path2);
 
 
     }
@@ -96,7 +113,7 @@ public class MyTestScript : MonoBehaviour
     {
         Vector3 pos_of_listener = listener.transform.position;
         Vector3 nul = Vector3.zero;
-      //PluginWrapper.USetListener(pos_of_listener, listener.transform.forward, Vector3.up);
+        PluginWrapper.USetListener(pos_of_listener, listener.transform.forward, Vector3.up);
 
         AudioSourceStruct[] sources = new AudioSourceStruct[sourceObjects.Length];
 
@@ -108,10 +125,10 @@ public class MyTestScript : MonoBehaviour
 
         }
 
-       //PluginWrapper.USetSources(sources, sourceObjects.Length);
+        PluginWrapper.USetSources(sources, sourceObjects.Length);
         
-        //PluginWrapper.USpatializeSourcesAndAudio();
-      //PluginWrapper.UUpdateAudioEngine();
+        PluginWrapper.USpatializeSourcesAndAudio();
+        PluginWrapper.UUpdateAudioEngine();
         
 
 
@@ -119,7 +136,7 @@ public class MyTestScript : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-       //PluginWrapper.UShutdownAudioEngine();
+       PluginWrapper.UShutdownAudioEngine();
     }
 
 

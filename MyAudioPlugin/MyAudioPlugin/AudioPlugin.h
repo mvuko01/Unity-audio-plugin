@@ -68,7 +68,6 @@ struct SpatializerData {
 	AudioSourceMap mSources;
 
 	
-	
 	int numberOfSources = 0;
 };
 
