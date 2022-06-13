@@ -4475,11 +4475,8 @@ MonoBehaviour:
   listener: {fileID: 1136385240}
   sourceObjects:
   - sources: {fileID: 707003882}
-    min: 3
+    min: 1
     max: 35
-  - sources: {fileID: 1198814688}
-    min: 3
-    max: 25
 --- !u!114 &1136385245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4494,11 +4491,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivity: 200
   playerBody: {fileID: 527524658}
---- !u!1 &1198814688 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1593646924946518, guid: cdb86728281605546bb4352f8fa1be29, type: 3}
-  m_PrefabInstance: {fileID: 575629651}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1223250803
 PrefabInstance:
   m_ObjectHideFlags: 0

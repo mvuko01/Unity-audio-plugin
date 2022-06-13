@@ -42,7 +42,7 @@ public class MyTestScript : MonoBehaviour
 
 
         DirectoryInfo dir = new DirectoryInfo(Application.streamingAssetsPath);
-        FileInfo[] allFile = dir.GetFiles("*.mp3"); //nece ucitat mp3 datoteke
+        FileInfo[] allFile = dir.GetFiles("*.wav"); //nece ucitat mp3 datoteke
         string path;
 
         foreach (FileInfo file in allFile)

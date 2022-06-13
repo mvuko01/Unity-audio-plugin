@@ -47,7 +47,7 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1484}
+      Script: {instanceID: 1486}
     - Class: 114
       Script: {instanceID: 2232}
     - Class: 114
@@ -530,4 +530,4 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/SimpleNaturePack/Scenes/SimpleNaturePack_Demo.unity
-  playerPath: C:/Users/Matej/Desktop/ZavrsniRad/Builds/WindowsFinalBuild/AudioPluginProject.exe
+  playerPath: C:/Users/Matej/Desktop/ZavrsniRad/Builds/TEST_3/AudioPluginProject.exe
