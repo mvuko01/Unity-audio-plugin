@@ -15,8 +15,10 @@ SpatializerData spatializerData;
 
 Implementation::Implementation() {
 	system = NULL;
+
 	ErrorCheck(System_Create(&system));
 	ErrorCheck(system->init(10, FMOD_INIT_NORMAL, 0));
+
 	mnNextChannelId = 0;
 } //Implementation constructor creates and starts the FMOD system
 
