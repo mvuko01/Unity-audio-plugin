@@ -48,7 +48,7 @@ public class MyTestScript : MonoBehaviour
       
 
 
-        string name1 = "aaa.wav";
+        string name1 = "0001724.mp3";
         string name2 = "bbb.wav";
 
 
@@ -79,15 +79,7 @@ public class MyTestScript : MonoBehaviour
 
 
 
-        // _path2 = "file:///" + _path2;
-        // filepath = "file:///" + filepath;
-
-
-
-
-        // Debug.Log(path1String);*/
-        //Debug.Log("Second path: " + _path1);
-        // Debug.Log("Filepath path: " + filepath);
+        
 
         int rez = PluginWrapper.ULoadSound(filepath1, true);
         Debug.Log("Result of load sound: " + rez);
@@ -100,10 +92,7 @@ public class MyTestScript : MonoBehaviour
         Debug.Log("Result of play sound: " + rez);
 
 
-        //PluginWrapper.ULoadSound(_path1, true);
-        //PluginWrapper.ULoadSound(_path2, true);
-        // PluginWrapper.UPlaySounds(_path1);
-        // PluginWrapper.UPlaySounds(_path2);
+      
 
 
     }
@@ -133,6 +122,7 @@ public class MyTestScript : MonoBehaviour
 
 
     }
+
 
     private void OnApplicationQuit()
     {
