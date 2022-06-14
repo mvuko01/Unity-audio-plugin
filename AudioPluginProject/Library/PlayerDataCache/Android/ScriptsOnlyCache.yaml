@@ -1,6 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - FixedJoystick
     - MouseLook
     - MyTestScript
     - PlayerMovement
@@ -47,21 +48,23 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1486}
+      Script: {instanceID: 1484}
     - Class: 114
-      Script: {instanceID: 2232}
+      Script: {instanceID: 2230}
     - Class: 114
-      Script: {instanceID: 2332}
+      Script: {instanceID: 2330}
     - Class: 114
-      Script: {instanceID: 2478}
+      Script: {instanceID: 2476}
     - Class: 114
-      Script: {instanceID: 2650}
+      Script: {instanceID: 2648}
     - Class: 114
-      Script: {instanceID: 2658}
+      Script: {instanceID: 2656}
     - Class: 114
-      Script: {instanceID: 3384}
+      Script: {instanceID: 3382}
     - Class: 114
-      Script: {instanceID: 3752}
+      Script: {instanceID: 3750}
+    - Class: 114
+      Script: {instanceID: 18980}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 143
@@ -259,7 +262,7 @@ ScriptsOnlyBuild:
     className: TestResultRendererCallback
   - hash:
       serializedVersion: 2
-      Hash: 225d4586f7824a24f81679072e8c9a9d
+      Hash: 34d0b449ce3ac41f06bccb45ab46c723
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerMovement
@@ -527,7 +530,49 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
     className: TouchInputModule
+  - hash:
+      serializedVersion: 2
+      Hash: 824e8d4cb47ffd88ddf959dbd4526585
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: DynamicJoystick
+  - hash:
+      serializedVersion: 2
+      Hash: ce669872a2be11bc686ea22961d8a3bb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FloatingJoystick
+  - hash:
+      serializedVersion: 2
+      Hash: 9dac16f3efc511835ac976dfae55f580
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: VariableJoystick
+  - hash:
+      serializedVersion: 2
+      Hash: ce669872a2be11bc686ea22961d8a3bb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Joystick
+  - hash:
+      serializedVersion: 2
+      Hash: 528e9858840cb8370d93939fff6b42d9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: JoystickPlayerExample
+  - hash:
+      serializedVersion: 2
+      Hash: 9e27f44bbf48228f203a37254d40f8ae
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: JoystickSetterExample
+  - hash:
+      serializedVersion: 2
+      Hash: ce669872a2be11bc686ea22961d8a3bb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FixedJoystick
   platform: 13
   scenePathNames:
   - Assets/SimpleNaturePack/Scenes/SimpleNaturePack_Demo.unity
-  playerPath: C:/Users/Matej/Desktop/ZavrsniRad/Builds/Android Builds/SeventhBuild.apk
+  playerPath: C:/Users/Matej/Desktop/ZavrsniRad/Builds/Android Builds/FinalAudioBuild.apk

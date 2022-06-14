@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundmask;
 
+    public FixedJoystick joystick;
+
     Vector3 velocity;
     bool isGrounded;
     // Update is called once per frame
@@ -27,8 +29,11 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f;
         }
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        //float x = Input.GetAxis("Horizontal");
+        //float z = Input.GetAxis("Vertical");
+
+        float x = joystick.Horizontal;
+        float z = joystick.Vertical;
 
         Vector3 move = transform.right * x + transform.forward * z;
 

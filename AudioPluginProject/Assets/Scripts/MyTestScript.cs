@@ -49,31 +49,31 @@ public class MyTestScript : MonoBehaviour
 
 
         string name1 = "0001724.mp3";
-        string name2 = "bbb.wav";
+       // string name2 = "bbb.wav";
 
 
         string _path1 = System.IO.Path.Combine(Application.streamingAssetsPath, name1);
-        string _path2 = Path.Combine(Application.streamingAssetsPath, name2);
-       Debug.Log("Path 1" + _path1);
+       // string _path2 = Path.Combine(Application.streamingAssetsPath, name2);
+       
 
         UnityEngine.Networking.UnityWebRequest www1 = UnityEngine.Networking.UnityWebRequest.Get(_path1);
-        UnityEngine.Networking.UnityWebRequest www2 = UnityEngine.Networking.UnityWebRequest.Get(_path2);
+       // UnityEngine.Networking.UnityWebRequest www2 = UnityEngine.Networking.UnityWebRequest.Get(_path2);
 
         www1.SendWebRequest();
         while (!www1.isDone)
         {
         }
-       www2.SendWebRequest();
+      /* www2.SendWebRequest();
         while (!www2.isDone)
         {
-       }
+       }*/
 
         string filepath1 = Path.Combine(Application.persistentDataPath, name1);
         Debug.Log("Filepath " + filepath1);
         File.WriteAllBytes(filepath1, www1.downloadHandler.data);
 
-        string filepath2 = Path.Combine(Application.persistentDataPath, name2);
-        File.WriteAllBytes(filepath2, www2.downloadHandler.data);
+       /* string filepath2 = Path.Combine(Application.persistentDataPath, name2);
+        File.WriteAllBytes(filepath2, www2.downloadHandler.data);*/
 
 
 
@@ -86,10 +86,10 @@ public class MyTestScript : MonoBehaviour
         rez = PluginWrapper.UPlaySounds(filepath1);
         Debug.Log("Result of play sound: " + rez);
 
-        rez = PluginWrapper.ULoadSound(filepath2, true);
+        /*rez = PluginWrapper.ULoadSound(filepath2, true);
         Debug.Log("Result of load sound: " + rez);
         rez = PluginWrapper.UPlaySounds(filepath2);
-        Debug.Log("Result of play sound: " + rez);
+        Debug.Log("Result of play sound: " + rez);*/
 
 
       
