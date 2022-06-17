@@ -29,82 +29,46 @@ public class MyTestScript : MonoBehaviour
     
     public GameObject listener;
     public AudioSourceObjects[] sourceObjects;
+    private AudioSourceStruct[] sources;
 
 
-    private void Awake()
-    {
-           
-    }
+
+
+  
 
     void Start()
     {
 
         PluginWrapper.UInitAudioEngine();
+        sources = new AudioSourceStruct[sourceObjects.Length];
 
 
-
-
-
-      
-
-
-        string name1 = "0001724.mp3";
-       // string name2 = "bbb.wav";
-
-
-        string _path1 = System.IO.Path.Combine(Application.streamingAssetsPath, name1);
-       // string _path2 = Path.Combine(Application.streamingAssetsPath, name2);
-       
-
-        UnityEngine.Networking.UnityWebRequest www1 = UnityEngine.Networking.UnityWebRequest.Get(_path1);
-       // UnityEngine.Networking.UnityWebRequest www2 = UnityEngine.Networking.UnityWebRequest.Get(_path2);
-
-        www1.SendWebRequest();
-        while (!www1.isDone)
+        string audioName = "0001724.mp3";
+        string _path = System.IO.Path.Combine(Application.streamingAssetsPath, audioName);
+        UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(_path);
+        
+        www.SendWebRequest();
+        while (!www.isDone)
         {
         }
-      /* www2.SendWebRequest();
-        while (!www2.isDone)
-        {
-       }*/
+    
 
-        string filepath1 = Path.Combine(Application.persistentDataPath, name1);
-        Debug.Log("Filepath " + filepath1);
-        File.WriteAllBytes(filepath1, www1.downloadHandler.data);
-
-       /* string filepath2 = Path.Combine(Application.persistentDataPath, name2);
-        File.WriteAllBytes(filepath2, www2.downloadHandler.data);*/
+        string filepath = Path.Combine(Application.persistentDataPath, audioName);
+        File.WriteAllBytes(filepath, www.downloadHandler.data);
 
 
-
-
-
-        
-
-        int rez = PluginWrapper.ULoadSound(filepath1, true);
-        Debug.Log("Result of load sound: " + rez);
-        rez = PluginWrapper.UPlaySounds(filepath1);
-        Debug.Log("Result of play sound: " + rez);
-
-        /*rez = PluginWrapper.ULoadSound(filepath2, true);
-        Debug.Log("Result of load sound: " + rez);
-        rez = PluginWrapper.UPlaySounds(filepath2);
-        Debug.Log("Result of play sound: " + rez);*/
-
-
-      
-
+        PluginWrapper.ULoadSound(filepath, true);
+        PluginWrapper.UPlaySounds(filepath);
 
     }
 
 
     void Update()
     {
-        Vector3 pos_of_listener = listener.transform.position;
-        Vector3 nul = Vector3.zero;
-        PluginWrapper.USetListener(pos_of_listener, listener.transform.forward, Vector3.up);
+         
+        PluginWrapper.USetListener(listener.transform.position, listener.transform.forward, Vector3.up);
 
-        AudioSourceStruct[] sources = new AudioSourceStruct[sourceObjects.Length];
+        
 
         for (int i = 0; i < sourceObjects.Length; i++)
         {
@@ -119,7 +83,6 @@ public class MyTestScript : MonoBehaviour
         PluginWrapper.USpatializeSourcesAndAudio();
         PluginWrapper.UUpdateAudioEngine();
         
-
 
     }
 
